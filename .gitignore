@@ -24,3 +24,4 @@ target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 target/classes/zenit/ui/mainStyle.css
 /target/
+/lib/javafx-sdk-21.0.6/
