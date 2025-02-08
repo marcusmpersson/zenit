@@ -10,7 +10,6 @@ public class runTerminal extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/zenit/terminal/Terminal.fxml"));

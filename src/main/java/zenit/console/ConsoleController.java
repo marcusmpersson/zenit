@@ -175,7 +175,8 @@ public class ConsoleController implements Initializable {
 		noConsolePane.toFront();
 	}
 	
-	
+
+	//viktig metod
 	/**
 	 * Shows the choiceBox with terminal panes, and sets the choiceBox with console tabs to not 
 	 * visible. Also sets text color of the labels.
@@ -183,16 +184,16 @@ public class ConsoleController implements Initializable {
 	public void showTerminalTabs() {
 		btnConsole.setStyle("");
 		btnTerminal.setStyle("-fx-text-fill:white; -fx-border-color:#666; -fx-border-width: 0 0 2 0;");
-		
-		
+
+
 		if(terminalList.size() == 0) {
 			newTerminal();
 		}
 		else {
 			terminalAnchorPane.toFront();
 		}
-		
-		
+
+
 		consoleChoiceBox.setVisible(false);
 		consoleChoiceBox.setDisable(true);
 		terminalChoiceBox.setVisible(true);
@@ -221,9 +222,7 @@ public class ConsoleController implements Initializable {
 		consoleAnchorPane.setId("consoleAnchor");
 		fillAnchor(consoleArea);
 		fillAnchor(consoleAnchorPane);
-		
-		
-		
+
 		consoleAnchorPane.getChildren().add(consoleArea);
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
@@ -242,24 +241,23 @@ public class ConsoleController implements Initializable {
 	 *  AnchorPane and puts it as an option in the
 	 * choiceBox.
 	 */
-	public void newTerminal() {		
+	public void newTerminal() {
 		Terminal terminal = new Terminal(createTerminalConfig(), FileSystems.getDefault().getPath(".").toAbsolutePath());
 		terminal.setId("Terminal ("+terminalList.size()+")");
 		terminalAnchorPane = new AnchorPane();
 		terminalAnchorPane.setStyle("-fx-background-color:black");
-		
+
 		terminal.setMinHeight(5);
 		fillAnchor(terminal);
 		fillAnchor(terminalAnchorPane);
-		
+
 		terminalAnchorPane.getChildren().add(terminal);
 		rootAnchor.getChildren().add(terminalAnchorPane);
 		terminalList.add(terminal);
 		terminalChoiceBox.getItems().add(terminal);
 		terminalChoiceBox.getSelectionModel().select(terminal);
-		
+
 		showTerminalTabs();
-		
 	}
 	
 	private TerminalConfig createTerminalConfig() {
@@ -319,7 +317,6 @@ public class ConsoleController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
 		consoleChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 						
 			if(newValue != null) {

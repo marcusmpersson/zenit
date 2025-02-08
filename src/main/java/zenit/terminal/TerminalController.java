@@ -19,11 +19,11 @@ public class TerminalController {
 	private AnchorPane basePane;
 	
 	public void initialize() {
-		
 		addTerminalTab();
 	}
 	
 	private void addTerminalTab() {
+
 		TerminalConfig darkConfig = new TerminalConfig();
 		darkConfig.setBackgroundColor(Color.BLACK);
 		darkConfig.setForegroundColor(Color.WHITE);

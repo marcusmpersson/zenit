@@ -167,7 +167,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
-			
+
 			File workspace = null;
 
 			try {
@@ -198,12 +198,12 @@ public class MainController extends VBox implements ThemeCustomizable {
 			stage.setTitle("Zenit - " + workspace.getPath());
 
 			initialize();
-			
+
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-			
+
 			stage.setOnCloseRequest(event -> quit());
 
 		} catch (Exception e) {

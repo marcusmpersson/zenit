@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+
 /**
  * Class for testing the UI.
  * @author Pontus Laos, Oskar Molander

@@ -66,7 +66,7 @@ public class JavaSourceCodeCompiler {
 	 * Starts a new thread to compile.
 	 */
 	public void startCompile() {
-		new Compile().start();	
+		new Compile().start();
 	}
 	
 	/**
@@ -135,7 +135,6 @@ public class JavaSourceCodeCompiler {
 		 * @return Executed process.
 		 */
 		protected Process compile() {
-
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
 			cb.setJDK(JDKPath);
 			cb.setRunPath(file.getPath());
