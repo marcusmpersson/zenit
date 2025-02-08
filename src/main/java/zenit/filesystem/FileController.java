@@ -96,6 +96,10 @@ public class FileController {
 		}
 		return null;
 	}
+
+	public static void test(){
+		System.out.println("test");
+	}
 	
 	/**
 	 * Reads a file line by line.
@@ -104,21 +108,24 @@ public class FileController {
 	 * Null if the file could not be read.
 	 */
 	public static String readFile(File file) {
-		if (file == null) {
+		if (file == null || file.isDirectory()) {
 			return "";
 		}
-		
-		try (
-			var fileReader = new FileReader(file);
-			var bufferedReader = new BufferedReader(fileReader);
-		) {
-			StringBuilder builder = new StringBuilder();
 
+		try {
+			FileReader fileReader = new FileReader(file);
+			var bufferedReader = new BufferedReader(fileReader);
+
+			StringBuilder builder = new StringBuilder();
 			String line;
+
 			while ((line = bufferedReader.readLine()) != null) {
 				builder.append(line);
 				builder.append(System.lineSeparator());
 			}
+
+			bufferedReader.close();
+			fileReader.close();
 
 			return builder.toString();
 		} catch (FileNotFoundException ex) {
@@ -130,6 +137,7 @@ public class FileController {
 
 			// TODO: handle IO exception
 		}
+
 		return null;
 	}
 	

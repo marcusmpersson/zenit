@@ -37,6 +37,7 @@ public class Tuple<T1, T2> {
 	public void set(T1 fst, T2 snd) {
 		this.fst = fst;
 		this.snd = snd;
+
 	}
 	
 	/**
