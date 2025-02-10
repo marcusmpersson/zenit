@@ -1,9 +1,5 @@
 package main.java.zenit.ui.projectinfo;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.regex.Matcher;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,12 +12,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.DialogBoxes;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.regex.Matcher;
 
 public class ProjectRunnableClassesController extends AnchorPane {
 	

@@ -1,7 +1,7 @@
 package main.java.zenit.console;
 
-import org.fxmisc.richtext.InlineCssTextArea;
 import javafx.application.Platform;
+import org.fxmisc.richtext.InlineCssTextArea;
 
 /**
  * A console area with prints string in two different colors. All error prints in one and all other

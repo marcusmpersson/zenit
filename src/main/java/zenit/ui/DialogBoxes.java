@@ -1,7 +1,5 @@
 package main.java.zenit.ui;
 
-import java.util.Optional;
-
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -9,6 +7,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 /**
  * Opening different kinds of dialog boxes with dynamic text depending of input.

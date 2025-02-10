@@ -1,10 +1,5 @@
 package main.java.zenit.searchinfile;
 
-import java.io.IOException;
-
-import com.sun.javafx.event.EventQueue;
-
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +13,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.zenit.ui.MainController;
-import main.java.zenit.zencodearea.ZenCodeArea;
+
+import java.io.IOException;
 
 public class SearchInFileController extends AnchorPane {
 

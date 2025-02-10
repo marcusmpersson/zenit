@@ -1,22 +1,21 @@
 package main.java.zenit.ui;
 
-import java.io.File;
-import java.util.Arrays;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-
+import javafx.scene.control.Tab;
+import javafx.scene.layout.AnchorPane;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.util.StringUtilities;
 import main.java.zenit.zencodearea.ZenCodeArea;
+
+import java.io.File;
+import java.util.Arrays;
 
 /**
  * A Tab extension that holds a File.

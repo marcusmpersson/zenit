@@ -1,8 +1,8 @@
 package main.java.zenit.filesystem.jreversions;
 
-import java.io.File;
-
 import main.java.zenit.Zenit;
+
+import java.io.File;
 
 public class JDKVerifier {
 	

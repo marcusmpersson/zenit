@@ -1,14 +1,10 @@
 package main.java.zenit.filesystem;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.metadata.Metadata;
+
+import java.io.*;
+import java.util.List;
 
 /**
  * Class for controlling and manipulating the file system of a project.
