@@ -2,6 +2,10 @@ package main.java.zenit.setup;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.beans.value.ChangeListener;
@@ -125,7 +129,7 @@ public class SetupController extends AnchorPane {
 				e.printStackTrace();
 			}	
 		}
-		
+
 		initRadioButtons();
 		
 		updateList();
@@ -274,7 +278,7 @@ public class SetupController extends AnchorPane {
 	
 	@FXML
 	private void done() {
-		
+
 		//Check if workspace input text has been updated since save
 		boolean notSavedWorkspace = true;
 		
@@ -314,7 +318,7 @@ public class SetupController extends AnchorPane {
 			stage.close();
 		}
 	}
-	
+
 	@FXML
 	private void onEnter() {
 		String input = workspacePath.getText();

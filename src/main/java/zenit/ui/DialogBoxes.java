@@ -124,4 +124,29 @@ public class DialogBoxes {
 			return 0;
 		}
 	}
+
+	public void unsavedModificationsDialog() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Unsaved modifications");
+		alert.setHeaderText("You have unsaved modifications");
+		alert.setContentText("Do you want to save them before closing?");
+
+		ButtonType save = new ButtonType("Save");
+		ButtonType noSave = new ButtonType("Don't save");
+
+		alert.getButtonTypes().setAll(save, noSave);
+
+		// Show the alert and wait for user response
+		Optional<ButtonType> result = alert.showAndWait();
+
+		//isPresent() checks if a value is present in the Optional.
+		if(result.isPresent()){
+			if (result.get() == save){
+				Platform.exit();
+			} else if (result.get() == noSave) {
+				Platform.exit();
+			}
+		}
+	}
+
 }

@@ -2,6 +2,7 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.PlatformManagedObject;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -9,8 +10,6 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.SplitPane.Divider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -47,12 +45,12 @@ import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
+import main.java.zenit.setup.SetupController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.util.Tuple;
-import main.java.zenit.ui.FileTab;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -152,7 +150,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	private FXMLLoader loader;
-	
+
+	private DialogBoxes dialog;
+
+	private SetupController setupController;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -160,6 +161,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	public MainController(Stage s) {
 		this.stage = s;
+		dialog = new DialogBoxes();
+		setupController = new SetupController();
 		this.zenCodeAreasTextSize = 12;
 		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
@@ -204,7 +207,34 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 
-			stage.setOnCloseRequest(event -> quit());
+		//	stage.setOnCloseRequest(event -> quit());
+
+			stage.setOnCloseRequest(event -> {
+				event.consume(); // Prevent immediate closing
+				File file = FileController.getWorkspace();
+
+
+				System.out.println(file);
+				Platform.exit();
+
+			});
+
+			/*
+			stage.setOnCloseRequest(event -> {
+				event.consume(); // Prevent immediate closing
+				boolean thereAreChanges = setupController.thereAreUnsavedChanges();
+
+
+				System.out.println(thereAreChanges);
+				if(thereAreChanges){
+					dialog.unsavedModificationsDialog(); // Show dialog and wait for user action
+				} else{
+					Platform.exit();
+				}
+
+			});
+
+			 */
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -17,7 +17,7 @@ import main.java.zenit.filesystem.metadata.Metadata;
  */
 public class FileController {
 	
-	private File workspace; //Used as a base-file for all files
+	private static File workspace; //Used as a base-file for all files
 
 	//Constructors
 	
@@ -32,9 +32,18 @@ public class FileController {
 	/**
 	 * Returns the current {@code workspace}-file
 	 */
-	public File getWorkspace() {
+	public static File getWorkspace() {
 		return workspace;
 	}
+
+
+	//TODO: Metoden är inte klar
+	public boolean thereAreUnsavedChanges() {
+		String fileContent = readFile(workspace);
+	}
+
+
+
 	
 	/**
 	 * Creates a new .java file from the File-objects using 
