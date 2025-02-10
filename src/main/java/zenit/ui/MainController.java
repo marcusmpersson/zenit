@@ -3,6 +3,8 @@ package main.java.zenit.ui;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.PlatformManagedObject;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 
@@ -207,34 +209,22 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 
-		//	stage.setOnCloseRequest(event -> quit());
-
 			stage.setOnCloseRequest(event -> {
 				event.consume(); // Prevent immediate closing
-				File file = FileController.getWorkspace();
 
+				boolean thereAreChanges = changesHaveBeenMade();
 
-				System.out.println(file);
-				Platform.exit();
-
-			});
-
-			/*
-			stage.setOnCloseRequest(event -> {
-				event.consume(); // Prevent immediate closing
-				boolean thereAreChanges = setupController.thereAreUnsavedChanges();
-
-
-				System.out.println(thereAreChanges);
 				if(thereAreChanges){
-					dialog.unsavedModificationsDialog(); // Show dialog and wait for user action
-				} else{
+					FileTab tab = getSelectedTab();
+					File file = tab.getFile();
+					String text = getZenCodeAreaContent();
+					dialog.unsavedModificationsDialog(file, text); // Show dialog and wait for user action
+				} else {
 					Platform.exit();
+
 				}
 
 			});
-
-			 */
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -243,6 +233,46 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	public FXMLLoader getFXMLLoader() {
 		return loader;
+	}
+
+	public boolean changesHaveBeenMade(){
+		String text = getZenCodeAreaContent(); //hämtar text som inte har sparats (om det finns)
+
+		File file1 = FileTab.getFilee();
+
+		String lastChanged = FileController.readFile(file1);
+
+		ArrayList<Character> textList = new ArrayList<>();
+		for (char c : text.toCharArray()) {
+			if(c != '\n' && c != '\r' && c != ' ') {
+				textList.add(c);
+			}
+
+		}
+
+		ArrayList<Character> lastChangedList = new ArrayList<>();
+		for (char c : lastChanged.toCharArray()) {
+			if(c != '\n' && c != '\r' && c != ' ') {
+				lastChangedList.add(c);
+			}
+		}
+
+		if (textList.equals(lastChangedList)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public String getZenCodeAreaContent() {
+		FileTab selectedTab = getSelectedTab();
+		if (selectedTab != null) {
+			ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+			if (zenCodeArea != null) {
+				return zenCodeArea.getText();
+			}
+		}
+		return "";
 	}
 	
 	/**

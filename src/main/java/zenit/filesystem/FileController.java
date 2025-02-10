@@ -36,16 +36,6 @@ public class FileController {
 		return workspace;
 	}
 
-
-	//TODO: Metoden är inte klar
-	public boolean thereAreUnsavedChanges() {
-		String fileContent = readFile(workspace);
-		return false;
-	}
-
-
-
-	
 	/**
 	 * Creates a new .java file from the File-objects using 
 	 * {@link JavaFileHandler#createFile(int, File, String) ClassHandler}
@@ -157,8 +147,7 @@ public class FileController {
 	 * @param file The file to write over.
 	 * @param dsd The content to write to disk
 	 */
-	public boolean writeFile(File file, String content) {
-
+	public static boolean writeFile(File file, String content) {
 		if (file != null && content != null) {
 			try {
 				JavaFileHandler.saveFile(file, content); //Tries to save file

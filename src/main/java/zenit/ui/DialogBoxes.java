@@ -1,5 +1,6 @@
 package main.java.zenit.ui;
 
+import java.io.File;
 import java.util.Optional;
 
 import javafx.application.Platform;
@@ -9,6 +10,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
+import main.java.zenit.filesystem.FileController;
 
 /**
  * Opening different kinds of dialog boxes with dynamic text depending of input.
@@ -125,7 +127,7 @@ public class DialogBoxes {
 		}
 	}
 
-	public void unsavedModificationsDialog() {
+	public void unsavedModificationsDialog(File file, String content) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setTitle("Unsaved modifications");
 		alert.setHeaderText("You have unsaved modifications");
@@ -142,11 +144,13 @@ public class DialogBoxes {
 		//isPresent() checks if a value is present in the Optional.
 		if(result.isPresent()){
 			if (result.get() == save){
+				FileController.writeFile(file, content);
 				Platform.exit();
 			} else if (result.get() == noSave) {
 				Platform.exit();
 			}
 		}
 	}
+
 
 }
