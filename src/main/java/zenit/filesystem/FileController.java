@@ -40,6 +40,7 @@ public class FileController {
 	//TODO: Metoden är inte klar
 	public boolean thereAreUnsavedChanges() {
 		String fileContent = readFile(workspace);
+		return false;
 	}
 
 
