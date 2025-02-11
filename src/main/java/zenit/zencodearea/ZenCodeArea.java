@@ -162,5 +162,10 @@ public class ZenCodeArea extends CodeArea {
 	//	font = fontFamily;
 		setStyle("-fx-font-family: " + fontFamily + ";" + 
 				"-fx-font-size: " + size + ";");
-	}	
+	}
+
+    public void unselectAll() {
+		selectRange(0, 0);
+
+    }
 }

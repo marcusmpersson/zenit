@@ -666,6 +666,15 @@ public class MainController extends VBox implements ThemeCustomizable {
 		zenCodeArea.selectAll();
 	}
 
+	// Edit fliken, unselect all
+	@FXML
+	private void unselectAll(ActionEvent event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		zenCodeArea.unselectAll();
+	}
+
+
 	/**
 	 * Tries to open the content of a file into a new tab using the FileController
 	 * instance. If tab containing file-content is already open, switches to that

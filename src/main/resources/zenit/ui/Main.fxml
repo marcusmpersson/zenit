@@ -132,7 +132,11 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-						<MenuItem mnemonicParsing="false" text="Unselect All" />
+						<MenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="unselectAll" onAction="#unselectAll" text="Unselect All">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+							</accelerator></MenuItem>
 					</items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="View">
