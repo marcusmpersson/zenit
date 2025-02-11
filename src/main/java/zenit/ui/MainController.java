@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -156,6 +157,21 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private DialogBoxes dialog;
 
 	private SetupController setupController;
+
+	@FXML
+	private MenuItem cut;
+
+	@FXML
+	private MenuItem copy;
+
+	@FXML
+	private MenuItem selectAll;
+
+	@FXML
+	private MenuItem unselectAll;
+
+
+
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -624,6 +640,30 @@ public class MainController extends VBox implements ThemeCustomizable {
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	// Edit fliken, cut
+	@FXML
+	private void cut(ActionEvent event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		zenCodeArea.cut();
+	}
+
+	// Edit fliken, copy
+	@FXML
+	private void copy(ActionEvent event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		zenCodeArea.copy();
+	}
+
+	// Edit fliken, select all
+	@FXML
+	private void selectAll(ActionEvent event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		zenCodeArea.selectAll();
 	}
 
 	/**

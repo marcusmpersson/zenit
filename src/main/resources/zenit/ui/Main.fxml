@@ -105,20 +105,20 @@
 				</Menu>
 				<Menu mnemonicParsing="false" text="Edit">
 					<items>
-						<MenuItem text="Undo">
+						<MenuItem fx:id="undo" onAction="#undo" text="Undo">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Z" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-						<MenuItem text="Redo">
+						<MenuItem fx:id="redo" onAction="#redo" text="Redo">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="Z" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                      </accelerator></MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem text="Cut">
+						<MenuItem fx:id="cut" onAction="#cut" text="Cut">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="X" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-						<MenuItem text="Copy">
+						<MenuItem fx:id="copy" onAction="#copy" text="Copy">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
@@ -128,7 +128,7 @@
                      </accelerator></MenuItem>
 						<MenuItem disable="true" mnemonicParsing="false" text="Delete" visible="false" />
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem text="Select All">
+						<MenuItem fx:id="selectAll" onAction="#selectAll" text="Select All">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
