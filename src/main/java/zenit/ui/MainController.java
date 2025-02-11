@@ -1,21 +1,41 @@
 package main.java.zenit.ui;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.PlatformManagedObject;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+
+import java.util.LinkedList;
+import java.util.ArrayList;
+
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.IndexRange;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
-import main.java.zenit.filesystem.FileController;
+import main.java.zenit.filesystem.FileController; // Aggregation
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.WorkspaceHandler;
@@ -24,23 +44,17 @@ import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
-import main.java.zenit.searchinfile.Search;
 import main.java.zenit.settingspanel.SettingsPanelController;
-import main.java.zenit.settingspanel.ThemeCustomizable;
-import main.java.zenit.ui.projectinfo.ProjectMetadataController;
+import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
+import main.java.zenit.searchinfile.Search;
+import main.java.zenit.setup.SetupController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.util.Tuple;
+import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * The controller part of the main GUI.
@@ -138,7 +152,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	private FXMLLoader loader;
-	
+
+	private DialogBoxes dialog;
+
+	private SetupController setupController;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -146,6 +163,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	public MainController(Stage s) {
 		this.stage = s;
+		dialog = new DialogBoxes();
+		setupController = new SetupController();
 		this.zenCodeAreasTextSize = 12;
 		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
@@ -190,7 +209,22 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 
-			stage.setOnCloseRequest(event -> quit());
+			stage.setOnCloseRequest(event -> {
+				event.consume(); // Prevent immediate closing
+
+				boolean thereAreChanges = changesHaveBeenMade();
+
+				if(thereAreChanges){
+					FileTab tab = getSelectedTab();
+					File file = tab.getFile();
+					String text = getZenCodeAreaContent();
+					dialog.unsavedModificationsDialog(file, text); // Show dialog and wait for user action
+				} else {
+					Platform.exit();
+
+				}
+
+			});
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -199,6 +233,46 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	public FXMLLoader getFXMLLoader() {
 		return loader;
+	}
+
+	public boolean changesHaveBeenMade(){
+		String text = getZenCodeAreaContent(); //hämtar text som inte har sparats (om det finns)
+
+		File file1 = FileTab.getFilee();
+
+		String lastChanged = FileController.readFile(file1);
+
+		ArrayList<Character> textList = new ArrayList<>();
+		for (char c : text.toCharArray()) {
+			if(c != '\n' && c != '\r' && c != ' ') {
+				textList.add(c);
+			}
+
+		}
+
+		ArrayList<Character> lastChangedList = new ArrayList<>();
+		for (char c : lastChanged.toCharArray()) {
+			if(c != '\n' && c != '\r' && c != ' ') {
+				lastChangedList.add(c);
+			}
+		}
+
+		if (textList.equals(lastChangedList)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public String getZenCodeAreaContent() {
+		FileTab selectedTab = getSelectedTab();
+		if (selectedTab != null) {
+			ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+			if (zenCodeArea != null) {
+				return zenCodeArea.getText();
+			}
+		}
+		return "";
 	}
 	
 	/**

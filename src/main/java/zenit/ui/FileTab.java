@@ -1,21 +1,24 @@
 package main.java.zenit.ui;
 
+import java.io.File;
+import java.util.Arrays;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.AnchorPane;
+
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.util.StringUtilities;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
-import java.io.File;
-import java.util.Arrays;
+import javax.swing.plaf.PanelUI;
 
 /**
  * A Tab extension that holds a File.
@@ -23,14 +26,24 @@ import java.util.Arrays;
  *
  */
 public class FileTab extends Tab {
-	private File initialFile;
-	private File file;
-	private String initialTitle;
+	private static File initialFile;
+	private static File file;
+	private static String initialTitle;
 	private MainController mc;
 	
 	private ZenCodeArea zenCodeArea;
 	
 	private boolean hasChanged;
+
+	public static File getInitialFile() {
+		return initialFile;
+	}
+
+	public static File getFilee() {
+		return file;
+	}
+
+
 	
 	/**
 	 * Constructs a new FileTab without a file, setting the title to "Untitled".
@@ -239,7 +252,7 @@ public class FileTab extends Tab {
 	 * Returns the attached File.
 	 * @return The File.
 	 */
-	public File getFile() {
+	public static File getFile() {
 		return file;
 	}
 	

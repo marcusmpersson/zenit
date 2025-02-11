@@ -1,25 +1,34 @@
 package main.java.zenit.setup;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import main.java.zenit.Zenit;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.filesystem.jreversions.JREVersions;
 import main.java.zenit.ui.DialogBoxes;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Controller for the setup window of the application.
@@ -120,7 +129,7 @@ public class SetupController extends AnchorPane {
 				e.printStackTrace();
 			}	
 		}
-		
+
 		initRadioButtons();
 		
 		updateList();
@@ -269,7 +278,7 @@ public class SetupController extends AnchorPane {
 	
 	@FXML
 	private void done() {
-		
+
 		//Check if workspace input text has been updated since save
 		boolean notSavedWorkspace = true;
 		
@@ -309,7 +318,7 @@ public class SetupController extends AnchorPane {
 			stage.close();
 		}
 	}
-	
+
 	@FXML
 	private void onEnter() {
 		String input = workspacePath.getText();

@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class FileController {
 	
-	private File workspace; //Used as a base-file for all files
+	private static File workspace; //Used as a base-file for all files
 
 	//Constructors
 	
@@ -28,10 +28,10 @@ public class FileController {
 	/**
 	 * Returns the current {@code workspace}-file
 	 */
-	public File getWorkspace() {
+	public static File getWorkspace() {
 		return workspace;
 	}
-	
+
 	/**
 	 * Creates a new .java file from the File-objects using 
 	 * {@link JavaFileHandler#createFile(int, File, String) ClassHandler}
@@ -143,8 +143,7 @@ public class FileController {
 	 * @param file The file to write over.
 	 * @param dsd The content to write to disk
 	 */
-	public boolean writeFile(File file, String content) {
-
+	public static boolean writeFile(File file, String content) {
 		if (file != null && content != null) {
 			try {
 				JavaFileHandler.saveFile(file, content); //Tries to save file
