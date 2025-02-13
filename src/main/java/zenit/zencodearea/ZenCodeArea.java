@@ -99,27 +99,40 @@ public class ZenCodeArea extends CodeArea {
 		this.requestFocus();
 	}
 
-	//provide code suggestions based on the users input.
-	public void checkForSuggestions(String input) {
+	public ArrayList<String> codeSuggestionArray(){
 		ArrayList<String> suggestions = new ArrayList<>();
 		suggestions.add("sout");
 		suggestions.add("psvm");
 		suggestions.add("fori");
+		suggestions.add("switch");
+		suggestions.add("while");
+		suggestions.add("scanner");
+		suggestions.add("classdef");
+		suggestions.add("try");
+		suggestions.add("thread");
+
+		return suggestions;
+	}
+
+	//provide code suggestions based on the users input.
+	public void checkForSuggestions(String input) {
+		ArrayList<String> suggestions = codeSuggestionArray();
 
 		for (String suggestion : suggestions) {
 			if (input.contains(suggestion)) {
 				switch (suggestion) {
 					case "sout":
 
-						//the first getCaretPosition calculates the starting position for replacing the text.
-						//the second getCaretPosition returns the current position of the caret (cursor) in the text area.
-						// Subtracting suggestion.length() moves the position back by the length of the suggestion string,
-						// effectively marking the start of the text to be replaced.
-
-
 						/*
 						replaceText  replaces a portion of the text in the CodeArea. It takes three parameters: the start position,
 						the end position, and the replacement text.
+
+						The start position is calculated by subtracting the length of the suggestion from the current caret position.
+						This means that it replaces the text from were the cursor is to the start of the suggestion.
+
+						The end position is the current caret position, which means that the whole word is replaced.
+
+						"moveTo" moves the caret to the position specified. In this case, it moves the caret to 2 positions back, inside the parenthesis.
 						 */
 						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "System.out.println();");
 						this.moveTo(this.getCaretPosition() - 2);
@@ -132,9 +145,43 @@ public class ZenCodeArea extends CodeArea {
 						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "for (int i = 0; i < ; i++) { }");
 						this.moveTo(this.getCaretPosition() - 9);
 						break;
+
+					case "switch":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "switch () { case : break; default: break; }");
+						this.moveTo(this.getCaretPosition());
+						break;
+
+					case "while":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "while () { }");
+						this.moveTo(this.getCaretPosition() - 1);
+						break;
+
+					case "scanner":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "Scanner input = new Scanner(System.in);");
+						this.moveTo(this.getCaretPosition() - 1);
+						break;
+
+					case "classdef":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "public class ClassName { }");
+						this.moveTo(this.getCaretPosition() - 1);
+						break;
+
+					case "try":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "try { } catch (Exception e) { }");
+						this.moveTo(this.getCaretPosition() - 1);
+						break;
+
+					case "thread":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "Thread thread = new Thread();");
+						this.moveTo(this.getCaretPosition() - 1);
+						break;
 				}
 			}
 		}
+	}
+
+	public void codeSuggestionDropDownMenu(){
+
 	}
 
 	public void update() {
