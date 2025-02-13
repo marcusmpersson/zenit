@@ -202,6 +202,7 @@ public class ZenCodeArea extends CodeArea {
 		return spansBuilder.create();
 	}
 
+
 	public void setFontSize(int newFontSize) {
 		//fontSize = newFontSize;
 		setStyle("-fx-font-size: " + newFontSize);
