@@ -87,6 +87,14 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                      </accelerator></MenuItem>
+						<MenuItem fx:id="addJAR" onAction="#addJAR" text="Add JAR">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+							</accelerator></MenuItem>
+						<MenuItem fx:id="removeJAR" onAction="#removeJAR" text="Remove JAR">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+							</accelerator></MenuItem>
                         <MenuItem fx:id="JREVersions" onAction="#openJREVersions" text="JRE Versions">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="J" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
