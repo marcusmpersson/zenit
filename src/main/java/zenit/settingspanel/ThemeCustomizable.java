@@ -1,8 +1,8 @@
 package main.java.zenit.settingspanel;
 
-import java.io.File;
-
 import javafx.stage.Stage;
+
+import java.io.File;
 
 public interface ThemeCustomizable {
 	

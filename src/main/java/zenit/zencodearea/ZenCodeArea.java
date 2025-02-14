@@ -1,25 +1,25 @@
 package main.java.zenit.zencodearea;
 
+import javafx.concurrent.Task;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.concurrent.Task;
-
-import java.time.Duration;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Collections;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.fxmisc.wellbehaved.event.Nodes;
 import org.fxmisc.wellbehaved.event.EventPattern;
 import org.fxmisc.wellbehaved.event.InputMap;
+import org.fxmisc.wellbehaved.event.Nodes;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -62,7 +62,7 @@ public class ZenCodeArea extends CodeArea {
 	public ZenCodeArea() {
 		this(14, "Times new Roman");
 	}
-	
+
 	public ZenCodeArea(int textSize, String font) {
 		setParagraphGraphicFactory(LineNumberFactory.get(this));
 
@@ -87,8 +87,56 @@ public class ZenCodeArea extends CodeArea {
 //		fontSize = textSize;
 //		this.font = font;
 		setStyle("-fx-font-size: " + textSize +";-fx-font-family: " + font);
+
+		this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			if (event.getCode() == KeyCode.TAB) {
+				int currentParagraph = this.getCurrentParagraph();
+				String lineText = this.getParagraph(currentParagraph).getText();
+				checkForSuggestions(lineText);
+			}
+		});
+
+		this.requestFocus();
 	}
-	
+
+	//provide code suggestions based on the users input.
+	public void checkForSuggestions(String input) {
+		ArrayList<String> suggestions = new ArrayList<>();
+		suggestions.add("sout");
+		suggestions.add("psvm");
+		suggestions.add("fori");
+
+		for (String suggestion : suggestions) {
+			if (input.contains(suggestion)) {
+				switch (suggestion) {
+					case "sout":
+
+						//the first getCaretPosition calculates the starting position for replacing the text.
+						//the second getCaretPosition returns the current position of the caret (cursor) in the text area.
+						// Subtracting suggestion.length() moves the position back by the length of the suggestion string,
+						// effectively marking the start of the text to be replaced.
+
+
+						/*
+						replaceText  replaces a portion of the text in the CodeArea. It takes three parameters: the start position,
+						the end position, and the replacement text.
+						 */
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "System.out.println();");
+						this.moveTo(this.getCaretPosition() - 2);
+						break;
+					case "psvm":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "public static void main(String[] args) { }");
+						this.moveTo(this.getCaretPosition() - 2);
+						break;
+					case "fori":
+						this.replaceText(this.getCaretPosition() - suggestion.length(), this.getCaretPosition(), "for (int i = 0; i < ; i++) { }");
+						this.moveTo(this.getCaretPosition() - 9);
+						break;
+				}
+			}
+		}
+	}
+
 	public void update() {
 		var highlighting = computeHighlighting(getText());
 		applyHighlighting(highlighting);
@@ -154,6 +202,7 @@ public class ZenCodeArea extends CodeArea {
 		return spansBuilder.create();
 	}
 
+
 	public void setFontSize(int newFontSize) {
 		//fontSize = newFontSize;
 		setStyle("-fx-font-size: " + newFontSize);
@@ -163,5 +212,10 @@ public class ZenCodeArea extends CodeArea {
 	//	font = fontFamily;
 		setStyle("-fx-font-family: " + fontFamily + ";" + 
 				"-fx-font-size: " + size + ";");
-	}	
+	}
+
+    public void unselectAll() {
+		selectRange(0, 0);
+
+    }
 }

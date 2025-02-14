@@ -1,39 +1,27 @@
 package main.java.zenit.console;
 
-import java.net.URL;
-import java.nio.file.FileSystems;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import com.kodedu.terminalfx.Terminal;
 import com.kodedu.terminalfx.config.TerminalConfig;
-
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.ui.MainController;
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * The controller class for ConsoleArea
@@ -175,7 +163,8 @@ public class ConsoleController implements Initializable {
 		noConsolePane.toFront();
 	}
 	
-	
+
+	//viktig metod
 	/**
 	 * Shows the choiceBox with terminal panes, and sets the choiceBox with console tabs to not 
 	 * visible. Also sets text color of the labels.
@@ -183,16 +172,16 @@ public class ConsoleController implements Initializable {
 	public void showTerminalTabs() {
 		btnConsole.setStyle("");
 		btnTerminal.setStyle("-fx-text-fill:white; -fx-border-color:#666; -fx-border-width: 0 0 2 0;");
-		
-		
+
+
 		if(terminalList.size() == 0) {
 			newTerminal();
 		}
 		else {
 			terminalAnchorPane.toFront();
 		}
-		
-		
+
+
 		consoleChoiceBox.setVisible(false);
 		consoleChoiceBox.setDisable(true);
 		terminalChoiceBox.setVisible(true);
@@ -221,9 +210,7 @@ public class ConsoleController implements Initializable {
 		consoleAnchorPane.setId("consoleAnchor");
 		fillAnchor(consoleArea);
 		fillAnchor(consoleAnchorPane);
-		
-		
-		
+
 		consoleAnchorPane.getChildren().add(consoleArea);
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
@@ -242,24 +229,23 @@ public class ConsoleController implements Initializable {
 	 *  AnchorPane and puts it as an option in the
 	 * choiceBox.
 	 */
-	public void newTerminal() {		
+	public void newTerminal() {
 		Terminal terminal = new Terminal(createTerminalConfig(), FileSystems.getDefault().getPath(".").toAbsolutePath());
 		terminal.setId("Terminal ("+terminalList.size()+")");
 		terminalAnchorPane = new AnchorPane();
 		terminalAnchorPane.setStyle("-fx-background-color:black");
-		
+
 		terminal.setMinHeight(5);
 		fillAnchor(terminal);
 		fillAnchor(terminalAnchorPane);
-		
+
 		terminalAnchorPane.getChildren().add(terminal);
 		rootAnchor.getChildren().add(terminalAnchorPane);
 		terminalList.add(terminal);
 		terminalChoiceBox.getItems().add(terminal);
 		terminalChoiceBox.getSelectionModel().select(terminal);
-		
+
 		showTerminalTabs();
-		
 	}
 	
 	private TerminalConfig createTerminalConfig() {
@@ -299,7 +285,11 @@ public class ConsoleController implements Initializable {
 	 * Clears the active consoleArea
 	 */
 	public void clearConsole() {
-		activeConsole.clear();
+		if(activeConsole != null){
+			activeConsole.clear();
+		}
+
+
 	}
 	
 	
@@ -319,7 +309,6 @@ public class ConsoleController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-
 		consoleChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 						
 			if(newValue != null) {

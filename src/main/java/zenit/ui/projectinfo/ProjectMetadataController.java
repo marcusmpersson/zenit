@@ -1,17 +1,10 @@
 package main.java.zenit.ui.projectinfo;
 
-import java.io.File;
-import java.util.List;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +14,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
@@ -29,6 +21,9 @@ import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.filesystem.metadata.MetadataVerifier;
 import main.java.zenit.ui.DialogBoxes;
 import main.java.zenit.ui.MainController;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Window containing run and compile information about a project. Also ability to modify that

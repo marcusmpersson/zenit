@@ -1,10 +1,10 @@
 package main.java.zenit;
 
-import java.io.PrintStream;
-
 import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleAreaErrorStream;
 import main.java.zenit.console.ConsoleAreaOutputStream;
+
+import java.io.PrintStream;
 
 /**
  * This class redirects the PrintStream to given ConsoleArea.

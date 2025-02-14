@@ -1,10 +1,10 @@
 package main.java.zenit.ui.tree;
 
-import java.io.File;
-
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.io.File;
 
 /**
  * Extension of the TreeItem class with the ability to save a corresponding File-object

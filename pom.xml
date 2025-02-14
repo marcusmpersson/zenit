@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -20,6 +20,15 @@
 			<artifactId>javafx-fxml</artifactId>
 			<version>21.0.6</version>
 		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -28,17 +37,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.fxmisc.richtext</groupId>
 			<artifactId>richtextfx</artifactId>
-			<version>0.9.3</version>
+			<version>0.11.4</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-exec -->
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-exec</artifactId>
@@ -55,24 +59,43 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr4</artifactId>
-			<version>4.7.2</version>
+			<version>4.10.1</version>
 		</dependency>
-		
+
 		<dependency>
-	        <groupId>org.kordamp.ikonli</groupId>
-	        <artifactId>ikonli-javafx</artifactId>
-	        <version>11.3.3</version>
-	    </dependency>
-	    <dependency>
-		    <groupId>com.kodedu.terminalfx</groupId>
-		    <artifactId>terminalfx</artifactId>
-		    <version>1.2.0</version>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-javafx</artifactId>
+			<version>11.3.3</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.kordamp.ikonli</groupId>
-		    <artifactId>ikonli-fontawesome-pack</artifactId>
-		    <version>11.3.3</version>
+			<groupId>com.kodedu.terminalfx</groupId>
+			<artifactId>terminalfx</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>21.0.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.32</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.kordamp.ikonli</groupId>
+			<artifactId>ikonli-fontawesome-pack</artifactId>
+			<version>11.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -89,9 +112,19 @@
 		</repository>
 
 		<repository>
-		    <id>terminalfx-repo</id>
-		    <url>https://github.com/javaterminal/terminalfx/raw/master/releases</url>
-    	</repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+
+		<repository>
+			<id>oss.sonatype</id>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</repository>
+
+		<repository>
+			<id>terminalfx-repo</id>
+			<url>https://github.com/javaterminal/terminalfx/raw/master/releases</url>
+		</repository>
 	</repositories>
 
 	<build>

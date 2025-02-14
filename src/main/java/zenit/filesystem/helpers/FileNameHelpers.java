@@ -1,6 +1,7 @@
 package main.java.zenit.filesystem.helpers;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Static classes for manipulating filenames and structures
@@ -41,21 +42,31 @@ public class FileNameHelpers {
 	 */
 	public static String getPackagenameFromFile(File file) {
 		String packagename = null;
-		
-		if (file != null) {
 
+		if (file != null) {
 			String[] folders = getFoldersAsStringArray(file);
-			
+
 			int srcIndex = getSrcFolderIndex(folders);
 
-			if (srcIndex != -1 && folders.length > srcIndex) { //Filepath is deeper that src-folder
-				packagename = folders[srcIndex + 1]; //Package folder is one step down from src-folder
+			if (srcIndex != -1 && folders.length > srcIndex + 1) {
+				// Bygg paketnamnet från mappar efter 'src'
+				packagename = String.join(".", Arrays.copyOfRange(folders, srcIndex + 1, folders.length - 1));
+			} else if (srcIndex == -1) {
+				System.err.println("Ingen 'src'-mapp hittades i sökvägen: " + file.getAbsolutePath());
+			} else {
+				System.err.println("Ingen paketmapp hittades efter 'src'. Returnerar root som paket.");
+				packagename = ""; // Returnerar root-paket
 			}
 		}
-		
-		return packagename;
+
+		// Returnera paketnamnet eller ett standardvärde
+		return (packagename == null || packagename.isEmpty()) ? "default" : packagename;
 	}
-	
+
+
+
+
+
 	/**
 	 * Returns the classname from a filepath, if the project contains a src-folder and
 	 * the class is put in a package inside that src-folder.
