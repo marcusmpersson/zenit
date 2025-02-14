@@ -156,21 +156,9 @@ public class SetupController extends AnchorPane {
 	 * Updates the JDK list by reading from file. Add JDK to res/JDK.dat before triggering
 	 * Sorts the list.
 	 */
-	private void updateList() {
+	public void updateList() {
 		//Init list of JDKs
-		List<String> JDKs = JREVersions.readString();
-		
-		//Try to read the default JDK
-		File defaultJDKFile = JREVersions.getDefaultJDKFile();
-		if (defaultJDKFile != null) {
-			String defaultJDKName = defaultJDKFile.getName();
-			
-			if (defaultJDKName != null && JDKs.contains(defaultJDKName)) {
-				JDKs.remove(defaultJDKName);
-				defaultJDKName += " [default]";
-				JDKs.add(defaultJDKName);
-			}
-		}
+		List<String> JDKs = getJDKs();
 	
 		//Add to list
 		jdkList.getItems().clear();
@@ -180,6 +168,27 @@ public class SetupController extends AnchorPane {
 		jdkList.getItems().sort((o1,o2)->{
 			return o1.compareTo(o2);
 		});
+	}
+
+	public List<String> getJDKs() {
+		List<String> JDKs = JREVersions.readString();
+
+		String defaultJDK = getDefaultJDK();
+		if(JDKs.contains(defaultJDK)) {
+			JDKs.remove(defaultJDK);
+			JDKs.add(defaultJDK + " [default]");
+		}
+
+		return JDKs;
+	}
+
+	public String getDefaultJDK() {
+		String defaultJDK = null;
+		File defaultJDKFile = JREVersions.getDefaultJDKFile();
+		if (defaultJDKFile != null) {
+			defaultJDK = defaultJDKFile.getName();
+		}
+		return defaultJDK;
 	}
 	
 	/**
@@ -400,6 +409,10 @@ public class SetupController extends AnchorPane {
             	}
             }
 		}
+	}
+
+	public File getJDKDat() {
+		return JDKDat;
 	}
 	
 }

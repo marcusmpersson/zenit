@@ -97,6 +97,11 @@
 			<artifactId>ikonli-fontawesome-pack</artifactId>
 			<version>11.3.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.11.3</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -120,7 +125,6 @@
 			<id>terminalfx-repo</id>
 			<url>https://github.com/javaterminal/terminalfx/raw/master/releases</url>
 		</repository>
-
 	</repositories>
 
 	<build>
