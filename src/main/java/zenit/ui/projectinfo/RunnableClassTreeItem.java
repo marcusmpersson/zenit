@@ -1,8 +1,8 @@
 package main.java.zenit.ui.projectinfo;
 
-import java.io.File;
-
 import javafx.scene.control.TreeItem;
+
+import java.io.File;
 
 public class RunnableClassTreeItem<t> extends TreeItem<t> {
 	

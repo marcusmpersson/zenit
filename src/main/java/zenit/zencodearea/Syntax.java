@@ -1,8 +1,8 @@
 package main.java.zenit.zencodearea;
 
-import java.util.Map;
-
 import org.antlr.v4.tool.Grammar;
+
+import java.util.Map;
 
 /**
  * Describes the syntax for a ZenCodeArea

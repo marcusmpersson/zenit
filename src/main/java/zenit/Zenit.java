@@ -1,14 +1,13 @@
 package main.java.zenit;
 
-import java.io.File;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-
 import main.java.zenit.launchers.MacOSLauncher;
 import main.java.zenit.setup.SetupController;
 import main.java.zenit.ui.MainController;
+
+import java.io.File;
 
 /**
  * Used to launch the application

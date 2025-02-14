@@ -1,14 +1,10 @@
 package main.java.zenit.filesystem;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.metadata.Metadata;
+
+import java.io.*;
+import java.util.List;
 
 /**
  * Class for controlling and manipulating the file system of a project.
@@ -17,7 +13,7 @@ import main.java.zenit.filesystem.metadata.Metadata;
  */
 public class FileController {
 	
-	private File workspace; //Used as a base-file for all files
+	private static File workspace; //Used as a base-file for all files
 
 	//Constructors
 	
@@ -32,10 +28,10 @@ public class FileController {
 	/**
 	 * Returns the current {@code workspace}-file
 	 */
-	public File getWorkspace() {
+	public static File getWorkspace() {
 		return workspace;
 	}
-	
+
 	/**
 	 * Creates a new .java file from the File-objects using 
 	 * {@link JavaFileHandler#createFile(int, File, String) ClassHandler}
@@ -96,6 +92,10 @@ public class FileController {
 		}
 		return null;
 	}
+
+	public static void test(){
+		System.out.println("test");
+	}
 	
 	/**
 	 * Reads a file line by line.
@@ -104,21 +104,24 @@ public class FileController {
 	 * Null if the file could not be read.
 	 */
 	public static String readFile(File file) {
-		if (file == null) {
+		if (file == null || file.isDirectory()) {
 			return "";
 		}
-		
-		try (
-			var fileReader = new FileReader(file);
-			var bufferedReader = new BufferedReader(fileReader);
-		) {
-			StringBuilder builder = new StringBuilder();
 
+		try {
+			FileReader fileReader = new FileReader(file);
+			var bufferedReader = new BufferedReader(fileReader);
+
+			StringBuilder builder = new StringBuilder();
 			String line;
+
 			while ((line = bufferedReader.readLine()) != null) {
 				builder.append(line);
 				builder.append(System.lineSeparator());
 			}
+
+			bufferedReader.close();
+			fileReader.close();
 
 			return builder.toString();
 		} catch (FileNotFoundException ex) {
@@ -130,6 +133,7 @@ public class FileController {
 
 			// TODO: handle IO exception
 		}
+
 		return null;
 	}
 	
@@ -139,8 +143,7 @@ public class FileController {
 	 * @param file The file to write over.
 	 * @param dsd The content to write to disk
 	 */
-	public boolean writeFile(File file, String content) {
-
+	public static boolean writeFile(File file, String content) {
 		if (file != null && content != null) {
 			try {
 				JavaFileHandler.saveFile(file, content); //Tries to save file

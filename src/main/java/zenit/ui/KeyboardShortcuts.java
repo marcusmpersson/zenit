@@ -1,6 +1,5 @@
 package main.java.zenit.ui;
 
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;

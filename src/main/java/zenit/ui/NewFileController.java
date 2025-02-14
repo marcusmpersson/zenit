@@ -1,8 +1,5 @@
 package main.java.zenit.ui;
 
-import java.io.File;
-import java.io.IOException;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +14,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.File;
+import java.io.IOException;
 
 public class NewFileController extends AnchorPane {
 	

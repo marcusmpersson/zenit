@@ -1,16 +1,13 @@
 package main.java.zenit.javacodecompiler;
 
-import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-
-import javafx.application.Platform;
-import main.java.zenit.ConsoleRedirect;
-import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
+
+import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
 
 /**
  * 
@@ -66,7 +63,7 @@ public class JavaSourceCodeCompiler {
 	 * Starts a new thread to compile.
 	 */
 	public void startCompile() {
-		new Compile().start();	
+		new Compile().start();
 	}
 	
 	/**
@@ -135,7 +132,6 @@ public class JavaSourceCodeCompiler {
 		 * @return Executed process.
 		 */
 		protected Process compile() {
-
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
 			cb.setJDK(JDKPath);
 			cb.setRunPath(file.getPath());

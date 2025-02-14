@@ -4,7 +4,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-
 import main.java.zenit.ui.MainController;
 
 /**

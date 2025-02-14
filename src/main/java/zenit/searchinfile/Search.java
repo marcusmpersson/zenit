@@ -1,21 +1,14 @@
 package main.java.zenit.searchinfile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-
-import org.fxmisc.richtext.model.StyleSpan;
-import org.reactfx.value.Var;
-
-import javafx.application.Platform;
-import javafx.scene.control.Label;
 import main.java.zenit.ui.MainController;
 import main.java.zenit.util.Tuple;
 import main.java.zenit.zencodearea.ZenCodeArea;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * The Search class lets you search for a word then either
