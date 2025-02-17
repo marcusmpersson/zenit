@@ -40,6 +40,13 @@ public class ProjectHandler extends FolderHandler {
 			throw new IOException("Couldn't create project");
 		}
 	}
+
+	public void checkIfLibExists(File file) {
+		File lib = new File(file, "lib"); // Correct way to create the subdirectory path
+		if (!lib.exists()) {
+			lib.mkdirs(); // Ensures all parent directories are created if necessary
+		}
+	}
 	
 	/**
 	 * Imports a project from source folder to target folder
