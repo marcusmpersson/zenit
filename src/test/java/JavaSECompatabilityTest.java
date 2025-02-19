@@ -55,7 +55,7 @@ public class JavaSECompatabilityTest {
 
         while ((line = reader.readLine()) != null) {
             output.append(line).append("\n");
-            if (line.contains("uses deprecated method")) {
+            if (line.contains("uses deprecated")) {
                 deprecatedApiFound = true;
             }
         }
