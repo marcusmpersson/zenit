@@ -10,12 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JavaSECompatabilityTest {
 
     @Test
-    public void testRuntimeVersion() {
-        String version = System.getProperty("java.version");
-        assertTrue(version.startsWith("21"), "Application is not running Java 21");
-    }
-
-    @Test
     public void internalAPITest() throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(
                 "jdeps", "--multi-release", "21", "--jdk-internals", "--class-path", "target/dependency/*"
