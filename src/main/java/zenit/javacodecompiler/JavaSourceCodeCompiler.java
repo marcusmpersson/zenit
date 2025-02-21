@@ -5,7 +5,9 @@ import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
@@ -33,6 +35,7 @@ public class JavaSourceCodeCompiler {
 	protected Buffer<?> buffer;
 	protected MainController cont;
 	protected ConsoleController consoleController;
+	protected CommandBuilder cmb;
 
 	/**
 	 * Creates a new JavaSourceCodeCompiler for single classes without metadata-file.
@@ -58,7 +61,7 @@ public class JavaSourceCodeCompiler {
 		this.buffer = buffer;
 		this.cont = cont;
 	}
-	
+
 	/**
 	 * Starts a new thread to compile.
 	 */
@@ -71,6 +74,10 @@ public class JavaSourceCodeCompiler {
 	 */
 	public void startCompileAndRun() {
 		new CompileAndRun().start();
+	}
+
+	public String getJDKPath() {
+		return cmb.getJDK();
 	}
 	
 	/**
@@ -132,11 +139,11 @@ public class JavaSourceCodeCompiler {
 		 * @return Executed process.
 		 */
 		protected Process compile() {
-			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
-			cb.setJDK(JDKPath);
-			cb.setRunPath(file.getPath());
+			cmb = new CommandBuilder(CommandBuilder.COMPILE);
+			cmb.setJDK(JDKPath);
+			cmb.setRunPath(file.getPath());
 
-			String command = cb.generateCommand();
+			String command = cmb.generateCommand();
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;
