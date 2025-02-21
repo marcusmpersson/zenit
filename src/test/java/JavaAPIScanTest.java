@@ -27,7 +27,7 @@ public class JavaAPIScanTest {
     @Test
     public void internalAPITest() throws IOException, InterruptedException {
         ProcessBuilder pb = new ProcessBuilder(
-                "jdeps", "--multi-release", "21", "--jdk-internals", "--class-path", "target/dependency/*"
+                "jdeps", "--multi-release", "21", "--jdk-internals", "--class-path", "target/classes;target/dependency/*"
         );
 
         Process process = pb.start();
