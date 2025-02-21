@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -7,7 +8,21 @@ import java.io.InputStreamReader;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class JavaSECompatabilityTest {
+public class JavaAPIScanTest {
+
+    @BeforeAll
+    public static void copyDependencies() throws IOException, InterruptedException {
+        String mvn = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
+
+        ProcessBuilder pb = new ProcessBuilder(
+                mvn, "dependency:copy-dependencies"
+        );
+        pb.inheritIO();
+        Process process = pb.start();
+        if (process.waitFor() != 0) {
+            throw new RuntimeException("Could not create directory: target/dependency");
+        }
+    }
 
     @Test
     public void internalAPITest() throws IOException, InterruptedException {
