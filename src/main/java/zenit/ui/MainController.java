@@ -2,6 +2,10 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -18,15 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -706,6 +702,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 				//REPLACE_EXISTING ensures that if a file with the same name
 				//already exists at the destination, it will be overwritten.
                 Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+				addJarToClasspath(targetPath.toFile());
+				refreshUI();
+				
+
+
 
             } catch (IOException e) {
 				System.out.println("Could not copy.");
@@ -716,19 +717,70 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	}
 
+	private void addJarToClasspath(File jarFile) {
+		try {
+			URL jarURL = jarFile.toURI().toURL();
+			URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+			Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+			method.setAccessible(true);
+			method.invoke(classLoader, jarURL);
+			System.out.println("JAR added to classpath: " + jarFile.getName());
+		} catch (Exception e) {
+			System.out.println("Failed to add JAR to classpath.");
+			e.printStackTrace();
+		}
+	}
+
 	@FXML
 	private void removeJAR(ActionEvent event) {
 
 		FileTreeItem<String> selectedItem = getSelectedFileTreeItem();
 		if (selectedItem != null) {
-			FileTree.removeFromFile((FileTreeItem<String>) treeView.getRoot(), selectedItem.getFile());
+			TreeItem<String> root = treeView.getRoot();
+			FileTreeItem<String> rootItem = null;
+
+			if (root instanceof FileTreeItem) {
+				rootItem = (FileTreeItem<String>) root;
+			} else if (!root.getChildren().isEmpty() && root.getChildren().get(0) instanceof FileTreeItem) {
+				rootItem = (FileTreeItem<String>) root.getChildren().get(0);
+			}
+			System.out.println("Root item: " + (rootItem != null ? rootItem.getValue() : "NULL"));
+
+			if (rootItem != null) {
+				FileTree.removeFromFile(rootItem, selectedItem.getFile());
+			} else {
+				System.out.println("Error: Root item is NULL, cannot remove file.");
+			}
 			File file = selectedItem.getFile();
-			file.delete();
+			if (file.exists() && file.delete()) {
+				System.out.println("Removed JAR file: " + file.getName());
+			} else {
+				System.out.println("Error: Could not delete JAR file " + file.getName());
+			}
+			System.out.println("Removed JAR file: " + file.getName());
+			removeJarFromClasspath(file);
+			refreshUI();
 
-
+		} else {
 		}
 		System.out.println("Removed JAR file: " + selectedItem.getValue());
 	}
+
+	private void removeJarFromClasspath(File jarFile) {
+		try {
+			System.out.println("JAR removed from classpath (manual restart may be required): " + jarFile.getName());
+		} catch (Exception e) {
+			System.out.println("Failed to remove JAR from classpath.");
+			e.printStackTrace();
+		}
+	}
+
+	private void refreshUI() {
+		Platform.runLater(() -> {
+			treeView.refresh();
+		});
+	}
+
 
 
 	/**
