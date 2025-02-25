@@ -97,7 +97,7 @@ public class CommandBuilder {
 		}
 	}
 
-	public String generateCorrectCommand() {
+	public String generateCommand() {
 		String OS = Zenit.OS.toLowerCase();
 		return OS.startsWith("win") ? winCommand() : unixCommand();
 	}
@@ -114,35 +114,14 @@ public class CommandBuilder {
 
 		if (libraries != null && libraries.length > 0) {
 			command.append(" -cp \"");
-
 			if (tool.equals(RUN)) {
 				command.append(directory).append(";");
 			}
-
 			command.append(String.join(";",libraries));
 			command.append("\"");
 		}
 
-		if (directory != null && tool.equals(COMPILE)) {
-			command.append(" -d ").append(directory);
-		}
-
-		if (sourcepath != null) {
-			command.append(" ").append(sourcepath);
-		}
-
-		if (runPath != null && tool.equals(RUN)) {
-			command.append(" ").append(runPath.replace(File.separator, "/"));
-		}
-
-		if (tool.equals(COMPILE)) {
-			command.append(" ").append(runPath);
-		}
-
-		if (programArguments != null) {
-			command.append(" ").append(programArguments);
-		}
-
+		finalizeCommand(command);
 		return command.toString();
 	}
 
@@ -158,14 +137,18 @@ public class CommandBuilder {
 
 		if (libraries != null && libraries.length > 0) {
 			command.append(" -cp ");
-
 			if (tool.equals(RUN)) {
 				command.append("./").append(directory).append(":");
 			}
-
-			command.append(String.join(":",libraries));
+			command.append("./").append(String.join(":",libraries));
+			command.append(":.");
 		}
 
+		finalizeCommand(command);
+		return command.toString();
+	}
+
+	private void finalizeCommand(StringBuilder command) {
 		if (directory != null && tool.equals(COMPILE)) {
 			command.append(" -d ").append(directory);
 		}
@@ -185,11 +168,10 @@ public class CommandBuilder {
 		if (programArguments != null) {
 			command.append(" ").append(programArguments);
 		}
-
-		return command.toString();
 	}
 
-	public String generateCommand() {
+	@Deprecated
+	public String generateCommandOld() {
 		String command = JDK;
 		
 		if (VMArguments != null) {
