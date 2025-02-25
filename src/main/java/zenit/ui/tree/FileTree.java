@@ -36,7 +36,7 @@ public class FileTree {
 			itemName = files[index].getName();
 			if (!itemName.startsWith(".") && !itemName.equals("bin") && !itemName.endsWith(".class")) { //Doesn't include hidden files
 				type = calculateType(parent, files[index]);
-				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type);
+				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type, false);
 				items.add(item);
 				
 				if (files[index].isDirectory()) {
@@ -71,7 +71,7 @@ public class FileTree {
 		
 		int type = calculateType(parent, file);
 		
-		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
+		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type, false);
 		parent.getChildren().add(item);
 		parent.getChildren().sort((a, b) -> {
 			try {
