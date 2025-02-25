@@ -6,6 +6,7 @@ import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
@@ -117,12 +118,12 @@ public class JavaSourceCodeCompiler {
 		 */
 		protected void decodeMetadata() {
 			Metadata metadata = new Metadata(metadataFile);
-			
+
 			JDKPath = metadata.getJREVersion();
 			directory = metadata.getDirectory();
 			sourcepath = metadata.getSourcepath();
 			internalLibraries = metadata.getInternalLibraries();
-			externalLibraries = metadata.getExternalLibraries();	
+			externalLibraries = metadata.getExternalLibraries();
 		}
 
 		/**
@@ -137,6 +138,7 @@ public class JavaSourceCodeCompiler {
 			cb.setRunPath(file.getPath());
 
 			String command = cb.generateCommand();
+			System.out.println("Command #2" + command);
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;
@@ -160,7 +162,11 @@ public class JavaSourceCodeCompiler {
 			cb.setExternalLibraries(externalLibraries);
 			
 			String command = cb.generateCommand();
-			Process process = executeCommand(command, projectFile);
+			String correctedCommand = cb.generateCorrectCommand();
+			System.out.println("Original COMPILE: " + command);
+			System.out.println("Corrected COMPILE: " + cb.generateCorrectCommand());
+			//Process process = executeCommand(command, projectFile);
+			Process process = executeCommand(correctedCommand, projectFile);
 			redirectStreams(process);
 			return process;
 		}
@@ -291,9 +297,13 @@ public class JavaSourceCodeCompiler {
 			}
 					
 			String command = cb.generateCommand();
-			
-			Process process = executeCommand(command, projectFile);
-			
+			String correctedCommand = cb.generateCorrectCommand();
+			System.out.println("Original RUN: " + command);
+			System.out.println("Corrected RUN: " + correctedCommand);
+
+			//Process process = executeCommand(command, projectFile);
+			Process process = executeCommand(correctedCommand, projectFile);
+
 			// Runs command
 			redirectStreams(process);
 			

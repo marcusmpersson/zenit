@@ -344,6 +344,7 @@ public class ProjectMetadataController extends AnchorPane {
 		
 		if (selectedLibraries != null) {
 			boolean success = fileController.removeInternalLibraries(selectedLibraries, projectFile);
+			System.out.println("Success: " + success);
 			if (success) {
 				metadata = new Metadata(metadata.getMetadataFile());
 				updateLists();
