@@ -102,6 +102,18 @@
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.11.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.lsp4j</groupId>
+			<artifactId>org.eclipse.lsp4j</artifactId>
+			<version>0.24.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.platform</groupId>
+			<artifactId>org.eclipse.jdt.ls.launcher</artifactId>
+			<version>1.6.900</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
