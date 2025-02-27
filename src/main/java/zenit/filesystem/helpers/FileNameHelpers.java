@@ -196,8 +196,7 @@ public class FileNameHelpers {
 	public static String[] getFoldersAsStringArray(File file) {
 		String[] folders;
 		String filepath = file.getAbsolutePath(); //Get the path in string
-		folders = filepath.split("/"); //Split path into the different folders
-		
+		folders = filepath.split(File.separator.equals("\\") ? "\\\\" : File.separator); //Split path into the different folders
 		return folders;
 	}
 }
