@@ -46,7 +46,15 @@ public class FileHandlingTest {
 
         fileController.createFile(newClass, CodeSnippets.CLASS);
 
-        assertTrue(Files.exists(root.resolve("src").resolve("Class.java")), "Failed to create class: " + newClass);
+        try {
+            String content = Files.readString(root.resolve("src").resolve("Class.java"));
+            assertAll(
+                    () -> assertTrue(Files.exists(root.resolve("src").resolve("Class.java")), "Failed to create class: " + newClass),
+                    () -> assertTrue(content.contains("public class Class"), "Class file does not contain the expected class signature.")
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to execute test. Failed read operation: " + e);
+        }
     }
 
     @Test
@@ -57,7 +65,15 @@ public class FileHandlingTest {
 
         fileController.createFile(newInterface, CodeSnippets.INTERFACE);
 
-        assertTrue(Files.exists(root.resolve("src").resolve("Interface.java")), "Failed to create interface: " + newInterface);
+        try {
+            String content = Files.readString(root.resolve("src").resolve("Interface.java"));
+            assertAll(
+                    () -> assertTrue(Files.exists(root.resolve("src").resolve("Interface.java")), "Failed to create interface: " + newInterface),
+                    () -> assertTrue(content.contains("public interface Interface"), "Interface file does not contain the expected interface signature.")
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to execute test. Failed read operation: " + e);
+        }
     }
 
     @Test
@@ -138,7 +154,7 @@ public class FileHandlingTest {
 
         String expectedNormalized = content.replace("\r\n", "\n").trim();
         String actualNormalized = read.replace("\r\n", "\n").trim();
-        
+
         assertAll(
                 () -> assertNotNull(read, "Read content should not be null"),
                 () -> assertFalse(read.isEmpty(), "Read content should not be empty"),
