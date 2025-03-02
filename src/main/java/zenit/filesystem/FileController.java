@@ -1,12 +1,9 @@
 package main.java.zenit.filesystem;
 
-import javafx.stage.Stage;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.metadata.Metadata;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -16,9 +13,9 @@ import java.util.List;
  */
 public class FileController {
 	
-	private static File workspace;
-	private static final String  LIB_DIRECTORY = "lib";//Used as a base-file for all files
+	private static File workspace; //Used as a base-file for all files
 
+	//Constructors
 	
 	/**
 	 * Creates a new file controller to manipulate the file system
@@ -34,79 +31,6 @@ public class FileController {
 	public static File getWorkspace() {
 		return workspace;
 	}
-
-	private File getOrCreateLibDirectory() {
-		File libDir = new File(workspace, LIB_DIRECTORY);
-		if (!libDir.exists()) {
-			boolean created = libDir.mkdir();
-			if (created) {
-				System.out.println("Created lib directory: " + libDir.getAbsolutePath());
-			} else {
-				System.err.println("Failed to create lib directory.");
-			}
-			libDir.mkdir();
-		}
-		return libDir;
-	}
-
-	public boolean addLibrary(Stage stage, File jarFile) {
-		if (jarFile == null || !jarFile.exists()) {
-			System.err.println("FileController.addLibrary: The provided file does not exist.");
-			return false;
-		}
-		try {
-			File libDir = getOrCreateLibDirectory();
-			File targetFile = new File(libDir, jarFile.getName());
-			Files.copy(jarFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			return updateClasspath(targetFile, true);
-		} catch (IOException e) {
-			System.err.println("FileController.addLibrary: Error adding library - " + e.getMessage());
-			return false;
-		}
-	}
-
-	public boolean chooseAndImportLibrary(Stage stage, List<File> jarFiles) {
-		if (jarFiles == null || jarFiles.isEmpty()) {
-			System.err.println("No JAR files selected.");
-			return false;
-		}
-		boolean allSuccessful = true;
-		for (File jarFile : jarFiles) {
-			boolean success = addLibrary(stage, jarFile);
-			if (!success) {
-				allSuccessful = false;
-				System.err.println("Failed to import library: " + jarFile.getName());
-			}
-		}
-		return allSuccessful;
-	}
-
-
-
-	private boolean updateClasspath(File jarFile, boolean isAdding) {
-		File classpathFile = new File(workspace, ".classpath");
-		try {
-			if (!classpathFile.exists()) {
-				classpathFile.createNewFile();
-			}
-			List<String> lines = Files.readAllLines(classpathFile.toPath());
-			String entry = "<classpathentry kind=\"lib\" path=\"" + LIB_DIRECTORY + "/" + jarFile.getName() + "\"/>";
-
-			if (isAdding && !lines.contains(entry)) {
-				lines.add(entry);
-				System.out.println("Added to classpath: " + entry);
-			} else if (!isAdding) {
-				lines.remove(entry);
-				System.out.println("Removed from classpath: " + entry);
-			}
-			Files.write(classpathFile.toPath(), lines);
-			return true;
-		} catch (IOException e) {
-			System.err.println("FileController.updateClasspath: Error updating classpath - " + e.getMessage());
-			return false;
-		}
-	}
-
 
 	/**
 	 * Creates a new .java file from the File-objects using 

@@ -36,7 +36,7 @@ import javafx.stage.Stage;
 import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
-import main.java.zenit.filesystem.FileController;
+import main.java.zenit.filesystem.FileController; // Aggregation
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.WorkspaceHandler;
@@ -56,7 +56,6 @@ import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
-
 
 /**
  * The controller part of the main GUI.
@@ -1438,18 +1437,18 @@ public class MainController extends VBox implements ThemeCustomizable {
 	public void chooseAndImportLibraries(ProjectFile projectFile) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select jar file to import");
-
+		
 		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Libraries", "*.jar", "*.zip");
 		fileChooser.getExtensionFilters().add(filter);
 
-		List<File> jarFiles = (List<File>) fileChooser.showOpenMultipleDialog(stage);
-
+		List<File> jarFiles = fileChooser.showOpenMultipleDialog(stage);
+		
 		if (jarFiles != null) {
-			boolean success = fileController.chooseAndImportLibrary(stage, (List<File>) projectFile);
+			boolean success = fileController.addInternalLibraries(jarFiles, projectFile);
 			if (success) {
-				main.java.zenit.ui.DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
+				DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
 			} else {
-				main.java.zenit.ui.DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
+				DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
 			}
 		}
 	}
