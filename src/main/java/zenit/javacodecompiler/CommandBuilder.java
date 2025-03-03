@@ -25,6 +25,10 @@ public class CommandBuilder {
 	public CommandBuilder(String tool) {
 		this.tool = tool;
 	}
+
+	public String getJDK() {
+		return JDK;
+	}
 	
 	public void setJDK(String JDK) {
 		//If project has special JDK
@@ -42,6 +46,8 @@ public class CommandBuilder {
 		if (this.JDK == null) {
 			this.JDK = tool;
 		}
+
+		//System.out.println("Using JDK: " + this.JDK);
 	}
 
 	public void setDirectory(String directory) {

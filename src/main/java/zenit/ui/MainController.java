@@ -398,7 +398,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	private void initTree() {
 		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "workspace",
-				FileTreeItem.WORKSPACE);
+				FileTreeItem.WORKSPACE, false);
 		File workspace = fileController.getWorkspace();
 		if (workspace != null) {
 			FileTree.createNodes(rootItem, workspace);

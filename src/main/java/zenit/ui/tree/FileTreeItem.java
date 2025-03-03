@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Extension of the TreeItem class with the ability to save a corresponding File-object
@@ -28,21 +30,22 @@ public class FileTreeItem<T> extends TreeItem<T> {
 
 
     private ImageView icon;
+	private ImageView playIcon;
     
 	
 	/**
 	 * @param file Corresponding file
 	 * @param name
 	 */
-	public FileTreeItem(File file, T name, int type) {
+	public FileTreeItem(File file, T name, int type, boolean test) {
 		super(name);
 		this.file = file;
 		this.type = type;
 		
-		setIcon();
+		setIcon(test);
 	}
 	
-	public void setIcon() {
+	public void setIcon(boolean test) {
 		String url = null;
 		switch(type) {
 		case PROJECT: url = "/zenit/ui/tree/project.png"; break;
@@ -53,16 +56,33 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		case FILE: url = "/zenit/ui/tree/file.png"; break;
 		case INCOMPATIBLE: url = "/zenit/ui/tree/incompatible.png"; break;
 		}
-		
-		if (url != null) {
-			icon = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
-			icon.setFitHeight(16);
-			icon.setFitWidth(16);
-			icon.setSmooth(true);
-			this.setGraphic(icon);
+
+		if (!test) {
+			if (url != null) {
+				icon = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
+				icon.setFitHeight(16);
+				icon.setFitWidth(16);
+				icon.setSmooth(true);
+				this.setGraphic(icon);
+			}
+
+
+			if (isRunnableJavaClass(file)) {
+				addPlayIcon();
+			}
 		}
 	}
-	
+
+	private void addPlayIcon() {
+		playIcon = new ImageView(new Image(getClass().getResource("/zenit/ui/tree/play.png").toExternalForm()));
+		playIcon.setFitHeight(16);
+		playIcon.setFitWidth(16);
+		playIcon.setSmooth(true);
+
+		// Add play icon to the right of the class icon
+		this.setGraphic(new javafx.scene.layout.HBox(5, icon, playIcon));
+	}
+
 	/**
 	 * Set the corresponding file
 	 */
@@ -95,5 +115,22 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 		
 		return stringType;
+	}
+
+	public boolean isRunnableJavaClass(File file) {
+		if (file.getName().endsWith(".java")) {
+			try {
+				// Check if the file contains a main method
+				String content = new String(Files.readAllBytes(file.toPath()));
+				return content.contains("public static void main(String[] args)");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
+	public ImageView getPlayIcon() {
+		return playIcon;
 	}
 }
