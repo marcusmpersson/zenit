@@ -997,8 +997,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 				else {
 					consoleArea.setID(consoleArea.getFileName()+ " <Terminated>");
 				}
-				
-				
+
+				updateFileTreeItem(file);
 			}
 			
 		} catch (Exception e) {
@@ -1008,6 +1008,19 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	
 	
+	}
+
+	private void updateFileTreeItem(File file) {
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		FileTreeItem<String> item = FileTree.getTreeItemFromFile(root, file);
+		if (item != null) {
+			if (item.isRunnableJavaClass(file)) {
+				item.addPlayIcon();
+			}
+			else {
+				item.removePlayIcon();
+			}
+		}
 	}
 
 	/**

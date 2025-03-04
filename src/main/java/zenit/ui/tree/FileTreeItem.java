@@ -73,14 +73,23 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 	}
 
-	private void addPlayIcon() {
-		playIcon = new ImageView(new Image(getClass().getResource("/zenit/ui/tree/play.png").toExternalForm()));
-		playIcon.setFitHeight(16);
-		playIcon.setFitWidth(16);
-		playIcon.setSmooth(true);
+	public void addPlayIcon() {
+		if (playIcon == null) {
+			playIcon = new ImageView(new Image(getClass().getResource("/zenit/ui/tree/play.png").toExternalForm()));
+			playIcon.setFitHeight(16);
+			playIcon.setFitWidth(16);
+			playIcon.setSmooth(true);
 
-		// Add play icon to the right of the class icon
-		this.setGraphic(new javafx.scene.layout.HBox(5, icon, playIcon));
+			// Add play icon to the right of the class icon
+			this.setGraphic(new javafx.scene.layout.HBox(5, icon, playIcon));
+		}
+	}
+
+	public void removePlayIcon() {
+		if (playIcon != null) {
+			this.setGraphic(icon);
+			playIcon = null;
+		}
 	}
 
 	/**
