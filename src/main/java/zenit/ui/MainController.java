@@ -263,30 +263,35 @@ public class MainController extends VBox implements ThemeCustomizable {
 	public boolean changesHaveBeenMade(){
 		String text = getZenCodeAreaContent(); //hämtar text som inte har sparats (om det finns)
 
-		File file1 = FileTab.getFilee();
+		FileTab selectedTab = getSelectedTab();
 
-		String lastChanged = FileController.readFile(file1);
+		if (selectedTab != null) {
+			File file1 = getSelectedTab().getFile();
 
-		ArrayList<Character> textList = new ArrayList<>();
-		for (char c : text.toCharArray()) {
-			if(c != '\n' && c != '\r' && c != ' ') {
-				textList.add(c);
+			String lastChanged = FileController.readFile(file1);
+
+			ArrayList<Character> textList = new ArrayList<>();
+			for (char c : text.toCharArray()) {
+				if (c != '\n' && c != '\r' && c != ' ') {
+					textList.add(c);
+				}
+
 			}
 
-		}
+			ArrayList<Character> lastChangedList = new ArrayList<>();
+			for (char c : lastChanged.toCharArray()) {
+				if (c != '\n' && c != '\r' && c != ' ') {
+					lastChangedList.add(c);
+				}
+			}
 
-		ArrayList<Character> lastChangedList = new ArrayList<>();
-		for (char c : lastChanged.toCharArray()) {
-			if(c != '\n' && c != '\r' && c != ' ') {
-				lastChangedList.add(c);
+			if (textList.equals(lastChangedList)) {
+				return false;
+			} else {
+				return true;
 			}
 		}
-
-		if (textList.equals(lastChangedList)) {
-			return false;
-		} else {
-			return true;
-		}
+		return false;
 	}
 
 	public String getZenCodeAreaContent() {
@@ -597,7 +602,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	@FXML
 	public void newTab(Event event) {
-		addTab();
+		addTab(null);
 	}
 	
 	@FXML
@@ -746,7 +751,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 			if (supportedFileFormat(file)) {
 			
-			FileTab selectedTab = addTab();
+			FileTab selectedTab = addTab(file);
 			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
@@ -1074,7 +1079,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param onClick The Runnable to run when the tab should be closed.
 	 * @return The new Tab.
 	 */
-	public FileTab addTab() {
+	public FileTab addTab(File file) {
+		FileTab exisingTab = getTabFromFile(file);
+		if (exisingTab != null) {
+			tabPane.getSelectionModel().select(exisingTab);
+			return exisingTab;
+		}
+
 		FileTab tab = new FileTab(createNewZenCodeArea(), this);
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
@@ -1177,16 +1188,20 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	private FileTab getTabFromFile(File file) {
 		var tabs = tabPane.getTabs();
+		System.out.println("Looking for file: " + file.getAbsolutePath());
 
 		for (Tab tab : tabs) {
 			FileTab fileTab = (FileTab) tab;
 			File tabFile = fileTab.getFile();
+			System.out.println("Checking tab: " + tabFile.getAbsolutePath());
 
 			if (tabFile != null && file.equals(tabFile)) {
+				System.out.println("Found existing tab for file: " + file.getAbsolutePath());
 				return fileTab;
 			}
 		}
 
+		System.out.println("No existing tab for file: " + file.getAbsolutePath());
 		return null;
 	}
 

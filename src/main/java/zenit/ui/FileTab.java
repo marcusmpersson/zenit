@@ -26,8 +26,8 @@ import javax.swing.plaf.PanelUI;
  *
  */
 public class FileTab extends Tab {
-	private static File initialFile;
-	private static File file;
+	private File initialFile;
+	private File file;
 	private static String initialTitle;
 	private MainController mc;
 	
@@ -35,11 +35,11 @@ public class FileTab extends Tab {
 	
 	private boolean hasChanged;
 
-	public static File getInitialFile() {
+	public File getInitialFile() {
 		return initialFile;
 	}
 
-	public static File getFilee() {
+	public File getFilee() {
 		return file;
 	}
 
@@ -252,7 +252,7 @@ public class FileTab extends Tab {
 	 * Returns the attached File.
 	 * @return The File.
 	 */
-	public static File getFile() {
+	public File getFile() {
 		return file;
 	}
 	
