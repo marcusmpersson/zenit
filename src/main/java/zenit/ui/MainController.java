@@ -1188,20 +1188,16 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	private FileTab getTabFromFile(File file) {
 		var tabs = tabPane.getTabs();
-		System.out.println("Looking for file: " + file.getAbsolutePath());
 
 		for (Tab tab : tabs) {
 			FileTab fileTab = (FileTab) tab;
 			File tabFile = fileTab.getFile();
-			System.out.println("Checking tab: " + tabFile.getAbsolutePath());
 
 			if (tabFile != null && file.equals(tabFile)) {
-				System.out.println("Found existing tab for file: " + file.getAbsolutePath());
 				return fileTab;
 			}
 		}
-
-		System.out.println("No existing tab for file: " + file.getAbsolutePath());
+		
 		return null;
 	}
 

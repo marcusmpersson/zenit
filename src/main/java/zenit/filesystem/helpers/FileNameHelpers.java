@@ -9,7 +9,7 @@ import java.util.Arrays;
  *
  */
 public class FileNameHelpers {
-	
+
 	/**
 	 * Returns the projectname from a filepath, if the project contains a src-folder.
 	 * Otherwise returns the last folder.
@@ -18,10 +18,10 @@ public class FileNameHelpers {
 	 */
 	public static String getProjectnameFromFile(File file) {
 		String projectname = null;
-	
+
 		if (file != null) {
 			String[] folders = getFoldersAsStringArray(file);
-			
+
 			int srcIndex = getSrcFolderIndex(folders);
 
 			if (srcIndex != -1) {
@@ -30,18 +30,18 @@ public class FileNameHelpers {
 				projectname = folders[folders.length-1];
 			}
 		}
-		
+
 		return projectname;
 	}
-	
+
 	/**
-	 * Returns the packagename from a filepath, if the project contains a src-folder and 
+	 * Returns the packagename from a filepath, if the project contains a src-folder and
 	 * the package is put in that src-folder.
 	 * @param file Filepath to search through
 	 * @return Returns the name of the package if found, otherwise null
 	 */
 	public static String getPackagenameFromFile(File file) {
-		String packagename = null;
+		//String packagename = null;
 
 		if (file != null) {
 			String[] folders = getFoldersAsStringArray(file);
@@ -49,18 +49,22 @@ public class FileNameHelpers {
 			int srcIndex = getSrcFolderIndex(folders);
 
 			if (srcIndex != -1 && folders.length > srcIndex + 1) {
+				String lastElement = folders[folders.length - 1];
+				boolean isJavaFile = lastElement.endsWith(".java");
+
+				int endIndex = isJavaFile ? folders.length - 1 : folders.length;
 				// Bygg paketnamnet från mappar efter 'src'
-				packagename = String.join(".", Arrays.copyOfRange(folders, srcIndex + 1, folders.length - 1));
+				return String.join(".", Arrays.copyOfRange(folders, srcIndex + 1, endIndex));
 			} else if (srcIndex == -1) {
 				System.err.println("Ingen 'src'-mapp hittades i sökvägen: " + file.getAbsolutePath());
 			} else {
 				System.err.println("Ingen paketmapp hittades efter 'src'. Returnerar root som paket.");
-				packagename = ""; // Returnerar root-paket
+				return ""; // Returnerar root-paket
 			}
 		}
 
 		// Returnera paketnamnet eller ett standardvärde
-		return (packagename == null || packagename.isEmpty()) ? "default" : packagename;
+		return "default";
 	}
 
 
@@ -75,19 +79,19 @@ public class FileNameHelpers {
 	 */
 	public static String getClassnameFromFile(File file) {
 		String classname = null;
-		
+
 		if (file != null) {
 			String[] folders = getFoldersAsStringArray(file);
-			
+
 			int srcIndex = getSrcFolderIndex(folders);
-			
+
 			if (srcIndex != -1 && folders.length > srcIndex+2 ) { //Filepath is atleast two folders deeper than src-folder
 				classname = folders[srcIndex +2]; //Class-file is two steps down from src-folder
 			}
 		}
 		return classname;
 	}
-	
+
 	/**
 	 * Removes the last file/folder in a filepath
 	 * @param filepath The filepath to alter
@@ -95,19 +99,19 @@ public class FileNameHelpers {
 	 */
 	public static File getFilepathWithoutTopFile(File filepath) {
 		File newFilepath;
-		
+
 		String[] folders = getFoldersAsStringArray(filepath);
 		String newFilepathString = "";
-		
+
 		for (int index = 0; index < folders.length-1; index++) {
 			newFilepathString += folders[index] + "/";
 		}
-		
+
 		newFilepath = new File(newFilepathString);
-		
+
 		return newFilepath;
 	}
-	
+
 	/**
 	 * Removes all folders up until the src-folder
 	 * @param file The file to alter
@@ -115,20 +119,20 @@ public class FileNameHelpers {
 	 */
 	public static File getFilepathWithoutPackageName(File file) {
 		File newFilepath;
-		
+
 		String[] folders = getFoldersAsStringArray(file);
 		int srcIndex = getSrcFolderIndex(folders);
 		String newFilepathString = "";
-		
+
 		for (int index = 0; index <= srcIndex; index++) {
 			newFilepathString += folders[index] + "/";
 		}
-		
+
 		newFilepath = new File(newFilepathString);
-		
+
 		return newFilepath;
 	}
-	
+
 	/**
 	 * Returns the filepath of the project
 	 * @param filepath The whole filepath
@@ -137,16 +141,16 @@ public class FileNameHelpers {
 	public static File getProjectFilepath(File filepath) {
 		String[] folders = getFoldersAsStringArray(filepath);
 		int srcIndex = getSrcFolderIndex(folders);
-		
+
 		String newFilepath = "";
 		for (int index = 0; index < srcIndex; index++) {
 			newFilepath += folders[index] + "/";
 		}
-		
+
 		System.out.println(newFilepath);
 		return new File(newFilepath);
 	}
-	
+
 	/**
 	 * Renames a folder in a filepath
 	 * @param file The file to be altered
@@ -157,18 +161,18 @@ public class FileNameHelpers {
 	public static File renameFolderInFile(File file, String oldName, String newName) {
 		String[] folders = getFoldersAsStringArray(file);
 		String newFilepath ="";
-		
+
 		for (String folder : folders) {
 			if (folder.equals(oldName)) {
 				folder = newName;
 			}
 			newFilepath += folder + "/";
 		}
-		
+
 		return new File(newFilepath);
-		
+
 	}
-	
+
 	/**
 	 * Returns the index of the src-folder inside a String-array
 	 * @param folders The array of folders to search through.
@@ -177,7 +181,7 @@ public class FileNameHelpers {
 	public static int getSrcFolderIndex(String[] folders) {
 		int srcIndex = -1; //Indicates how deep in the filestructure the src-folder is
 		int counter = 0;
-		
+
 		for (String folder : folders) {
 			if (folder.equals("src")) {
 				srcIndex = counter;
@@ -187,7 +191,7 @@ public class FileNameHelpers {
 		}
 		return srcIndex;
 	}
-	
+
 	/**
 	 * Converts a filepath into a string-array of folder names
 	 * @param file The filepath to convert
@@ -197,7 +201,7 @@ public class FileNameHelpers {
 		String[] folders;
 		String filepath = file.getAbsolutePath(); //Get the path in string
 		folders = filepath.split("/"); //Split path into the different folders
-		
+
 		return folders;
 	}
 }
