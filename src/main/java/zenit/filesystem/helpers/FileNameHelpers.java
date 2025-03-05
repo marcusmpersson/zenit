@@ -1,6 +1,8 @@
 package main.java.zenit.filesystem.helpers;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 /**
@@ -203,5 +205,36 @@ public class FileNameHelpers {
 		folders = filepath.split("/"); //Split path into the different folders
 
 		return folders;
+	}
+
+	public static void updatePackageName(File file, String newPackageName) throws IOException {
+		if (file.isDirectory() || !file.getName().endsWith(".java")) {
+			return;
+		}
+
+		File tempFile = new File(file.getAbsolutePath() + ".temp");
+		try (BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+			String line = reader.readLine();
+
+			if (line != null && line.startsWith("package ")) {
+				writer.write("package " + newPackageName + ";");
+				writer.newLine();
+				line = reader.readLine();
+			} else {
+				writer.write("package " + newPackageName + ";");
+				writer.newLine();
+				writer.newLine();
+			}
+
+			while (line != null) {
+				writer.write(line);
+				writer.newLine();
+				line = reader.readLine();
+			}
+		}
+
+		Files.move(tempFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	}
 }

@@ -4,11 +4,17 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
+import main.java.zenit.filesystem.helpers.FileNameHelpers;
 import main.java.zenit.ui.MainController;
 
+import javax.imageio.IIOException;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Class that extends {@link javafx.scene.control.ContextMenu} with static menu items with dynamic
@@ -29,7 +35,11 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	private MenuItem deleteItem = new MenuItem("Delete");
 	private MenuItem importJar = new MenuItem("Import jar");
 	private MenuItem properties = new MenuItem("Properties");
-	
+	private MenuItem moveItem = new MenuItem("Move");
+	private MenuItem dropItem = new MenuItem("Drop");
+
+	private FileTreeItem<String> itemToMove = null;
+
 	/**
 	 * Creates a new {@link TreeContextMenu} that can manipulate a specific {@link
 	 * javafx.scene.control.TreeView TreeView} instance and call methods in a specific
@@ -94,7 +104,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	private void initContextMenu() {
 		createItem.getItems().add(createClass);
 		createItem.getItems().add(createInterface);
-		getItems().addAll(createItem, renameItem, deleteItem);
+		getItems().addAll(createItem, renameItem, deleteItem, moveItem, dropItem);
 		createClass.setOnAction(this);
 		createInterface.setOnAction(this);
 		renameItem.setOnAction(this);
@@ -102,6 +112,9 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		createPackage.setOnAction(this);
 		importJar.setOnAction(this);
 		properties.setOnAction(this);
+		moveItem.setOnAction(this);
+		dropItem.setOnAction(this);
+		dropItem.setVisible(false);
 	}
 	
 	/**
@@ -117,6 +130,83 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), FileTreeItem.CLASS, false);
 			parent.getChildren().add(newItem);
 		}
+	}
+
+	private void moveFile(FileTreeItem<String> selectedItem, File destinationDir) {
+		File oldFile = selectedItem.getFile();
+		File newFile = new File(destinationDir, oldFile.getName());
+
+		if (newFile.exists()) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Move File Error");
+			alert.setHeaderText("File Move Failed");
+			alert.setContentText("A file with the name \"" + oldFile.getName() + "\" already exists in the destination directory.");
+			alert.showAndWait();
+			return;
+		}
+
+		newFile = controller.moveFile(oldFile, destinationDir);
+		if (newFile != null) {
+			selectedItem.setFile(newFile);
+			selectedItem.setValue(newFile.getName());
+			FileTree.changeFileForNodes(selectedItem, newFile);
+
+			TreeItem<String> parent = selectedItem.getParent();
+			parent.getChildren().remove(selectedItem);
+
+			FileTreeItem<String> newParent = findTreeItem(destinationDir);
+			if (newParent != null) {
+				newParent.getChildren().add(selectedItem);
+			}
+
+			String newPackageName = FileNameHelpers.getPackagenameFromFile(newFile);
+			try {
+				FileNameHelpers.updatePackageName(newFile, newPackageName);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			updateOpenTabs(oldFile, newFile);
+		}
+	}
+
+	private void updateOpenTabs(File oldFile, File newFile) {
+		TabPane tabPane = controller.getTabPane();
+		Tab oldTab = findTabByFile(tabPane, oldFile);
+		if (oldTab != null) {
+			tabPane.getTabs().remove(oldTab);
+			controller.openFile(newFile);
+		}
+	}
+
+	private Tab findTabByFile(TabPane tabPane, File file) {
+		String filePath = file.getAbsolutePath();
+		for (Tab tab : tabPane.getTabs()) {
+			if (tab.getUserData() != null) {
+				String tabFilePath = tab.getUserData().toString();
+				if (tabFilePath.equals(filePath)) {
+					return tab;
+				}
+			}
+		}
+		return null;
+	}
+
+	private FileTreeItem<String> findTreeItem(File file) {
+		return findTreeItem((FileTreeItem<String>) treeView.getRoot(), file);
+	}
+
+	private FileTreeItem<String> findTreeItem(FileTreeItem<String> root, File file) {
+		if (root.getFile().equals(file)) {
+			return root;
+		}
+		for (TreeItem<String> child : root.getChildren()) {
+			FileTreeItem<String> result = findTreeItem((FileTreeItem<String>) child, file);
+			if (result != null) {
+				return result;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -154,6 +244,13 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		} else if (actionEvent.getSource().equals(properties) && selectedItem.getType() == FileTreeItem.PROJECT) {
 			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
 			controller.showProjectProperties(projectFile);
+		} else if (actionEvent.getSource().equals(moveItem)) {
+			itemToMove = selectedItem;
+			dropItem.setVisible(true);
+		} else if (actionEvent.getSource().equals(dropItem) && itemToMove != null) {
+			moveFile(itemToMove, selectedItem.getFile());
+			itemToMove = null;
+			dropItem.setVisible(false);
 		}
 	}
 }

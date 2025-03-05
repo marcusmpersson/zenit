@@ -260,6 +260,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return loader;
 	}
 
+	public TabPane getTabPane() {
+		return tabPane;
+	}
+
 	public boolean changesHaveBeenMade(){
 		String text = getZenCodeAreaContent(); //hämtar text som inte har sparats (om det finns)
 
@@ -1088,6 +1092,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 		FileTab tab = new FileTab(createNewZenCodeArea(), this);
 		tab.setOnCloseRequest(event -> closeTab(event));
+		tab.setUserData(file.getAbsolutePath());
 		tabPane.getTabs().add(tab);
 
 		var selectionModel = tabPane.getSelectionModel();
@@ -1197,7 +1202,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 				return fileTab;
 			}
 		}
-		
 		return null;
 	}
 
@@ -1545,7 +1549,34 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 		
 	}
-	
-	
-	
+
+
+	public File moveFile(File selectedFile, File destinationDir) {
+		if (!destinationDir.exists()) {
+			if (!destinationDir.mkdirs()) {
+				return null;
+			}
+		}
+
+		if (!selectedFile.exists()) {
+			return null;
+		}
+
+		File destinationFile = new File(destinationDir, selectedFile.getName());
+
+		if (destinationFile.exists()) {
+			return null;
+		}
+
+		try {
+			boolean success = selectedFile.renameTo(destinationFile);
+			if (success) {
+				return destinationFile;
+			} else {
+				return null;
+			}
+		} catch (SecurityException e) {
+			return null;
+		}
+	}
 }
