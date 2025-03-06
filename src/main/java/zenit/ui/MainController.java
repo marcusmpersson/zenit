@@ -2,12 +2,9 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.PlatformManagedObject;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 
