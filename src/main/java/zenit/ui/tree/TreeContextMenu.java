@@ -170,7 +170,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		}
 	}
 
-	private void updateOpenTabs(File oldFile, File newFile) {
+	public void updateOpenTabs(File oldFile, File newFile) {
 		TabPane tabPane = controller.getTabPane();
 		Tab oldTab = findTabByFile(tabPane, oldFile);
 		if (oldTab != null) {
@@ -228,6 +228,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				selectedItem.setFile(newFile);
 				selectedItem.setValue(newFile.getName());
 				FileTree.changeFileForNodes(selectedItem, selectedItem.getFile());
+				updateOpenTabs(selectedFile, newFile);
 			}
 		} else if (actionEvent.getSource().equals(deleteItem)) {
 			controller.deleteFile(selectedFile);
