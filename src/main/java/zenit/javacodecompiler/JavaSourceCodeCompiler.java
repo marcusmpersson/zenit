@@ -6,6 +6,7 @@ import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
@@ -190,12 +191,18 @@ public class JavaSourceCodeCompiler {
 		 */
 		protected String createRunPathInProject() {
 			File projectFile = metadataFile.getParentFile();
-			String runPath = file.getPath();
 			String projectPath = projectFile.getPath();
 
-			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
+			ArrayList<String> javaFiles = new ArrayList<>();
+			findJavaFiles(projectFile, javaFiles);
+			
+			StringBuilder javaFilePaths = new StringBuilder();
+			for (String path: javaFiles) {
+				javaFilePaths.append(path.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), ""));
+				javaFilePaths.append(" ");
+			}
 
-			return runPath;
+			return javaFilePaths.toString().stripTrailing();
 		}
 
 		/**
@@ -209,6 +216,24 @@ public class JavaSourceCodeCompiler {
 
 			Executors.newSingleThreadExecutor().submit(inStream);
 			Executors.newSingleThreadExecutor().submit(errorStream);
+		}
+	}
+
+	/**
+	 * Searches for all the java files in the given folder and all of its sub folders recursively
+	 * @param folder folder from which we are searching
+	 * @param javaFiles list of currently found java files to be populated with more java files
+	 */
+	private void findJavaFiles(File folder, ArrayList<String> javaFiles) {
+		File[] files = folder.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isDirectory()) {
+					findJavaFiles(file, javaFiles);
+				} else if (file.isFile() && file.getName().endsWith(".java")) {
+					javaFiles.add(file.getPath());
+				}
+			}
 		}
 	}
 
@@ -273,7 +298,8 @@ public class JavaSourceCodeCompiler {
 		}
 		
 		private Process runFileInPackage() {
-			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
+			// For projects, there always need to be a Main class to run
+			runPath = new File("Main");
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
 			cb.setJDK(JDKPath);
@@ -306,6 +332,6 @@ public class JavaSourceCodeCompiler {
 			newRunPath = newRunPath.replaceAll(".java", "");
 			
 			return newRunPath;
-		}	
+		}
 	}
 }

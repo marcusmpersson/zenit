@@ -181,7 +181,7 @@ public class CommandBuilder {
 		mergeLibraries();
 		
 		if(tool.equals(RUN) && directory != null) {
-			command += " -cp ./" + directory;
+			command += " -cp " + directory;
 		}
 
 		if (libraries != null) {
@@ -189,14 +189,14 @@ public class CommandBuilder {
 				command += " -cp " + libraries[0];
 				if (libraries.length > 1) {
 					for (int i = 1; i < libraries.length; i++) {
-						command += ":" + libraries[i];
+						command += File.pathSeparatorChar + libraries[i];
 					}
 				}
 			} else if (tool.equals(RUN)) {
 				for (int i = 0; i < libraries.length; i++) {
-					command += ":." + File.separator + libraries[i];
+					command += File.pathSeparatorChar + libraries[i];
 				}
-				command += ":.";
+				//command += ":.";
 			}
 		}
 
