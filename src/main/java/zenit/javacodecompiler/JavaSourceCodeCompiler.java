@@ -117,12 +117,12 @@ public class JavaSourceCodeCompiler {
 		 */
 		protected void decodeMetadata() {
 			Metadata metadata = new Metadata(metadataFile);
-			
+
 			JDKPath = metadata.getJREVersion();
 			directory = metadata.getDirectory();
 			sourcepath = metadata.getSourcepath();
 			internalLibraries = metadata.getInternalLibraries();
-			externalLibraries = metadata.getExternalLibraries();	
+			externalLibraries = metadata.getExternalLibraries();
 		}
 
 		/**
@@ -137,6 +137,7 @@ public class JavaSourceCodeCompiler {
 			cb.setRunPath(file.getPath());
 
 			String command = cb.generateCommand();
+			System.out.println("Command #2" + command);
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;
@@ -291,9 +292,8 @@ public class JavaSourceCodeCompiler {
 			}
 					
 			String command = cb.generateCommand();
-			
 			Process process = executeCommand(command, projectFile);
-			
+
 			// Runs command
 			redirectStreams(process);
 			

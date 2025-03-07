@@ -102,6 +102,25 @@
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.11.3</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.6.0</version>
+
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>5.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>5.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -112,6 +131,7 @@
 		</repository>
 
 		<repository>
+
 			<id>kordamp</id>
 			<url>https://repo.kordamp.org/releases</url>
 		</repository>
@@ -122,6 +142,7 @@
 		</repository>
 
 		<repository>
+
 			<id>oss.sonatype</id>
 			<url>https://oss.sonatype.org/content/groups/public/</url>
 		</repository>
@@ -158,6 +179,27 @@
 					<mainClass>org.openjfx.MainApp</mainClass>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>enforce-java</id>
+						<goals><goal>enforce</goal></goals>
+						<configuration>
+							<rules>
+								<requireJavaVersion>
+									<version>21</version>
+								</requireJavaVersion>
+								<requiredUpperBoundDeps/>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>

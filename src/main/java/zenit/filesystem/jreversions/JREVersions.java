@@ -122,7 +122,7 @@ public class JREVersions {
 			return new File("/library/java/javavirtualmachines");
 		} else if (OS.equals("Linux")) {
 			return new File("/usr/lib/jvm");
-		} else if (OS.equals("Windows")) {
+		} else if (OS.startsWith("Windows")) {
 			return new File("C:\\Program Files\\Java\\");
 		}
 		

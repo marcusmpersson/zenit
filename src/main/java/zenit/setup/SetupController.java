@@ -33,25 +33,30 @@ import main.java.zenit.ui.DialogBoxes;
  *
  */
 public class SetupController extends AnchorPane {
-	
-	private Stage stage;
-	
+
+	public Stage stage;
+
 	private File workspaceDat = new File("res/workspace/workspace.dat");
 	private File JDKDat = new File("res/JDK/JDK.dat");
-	private File defaultJDKDat = new File ("res/JDK/DefaultJDK.dat");
-	
+	private File defaultJDKDat = new File("res/JDK/DefaultJDK.dat");
+
 	private File workspaceFile;
-	
+
 	private final ToggleGroup tgGroup;
-	
+
 	private RadioButtonListener rbListener;
-	
-	@FXML ListView<String> jdkList;
-	@FXML TextField workspacePath;
-	@FXML RadioButton rb1;
-	@FXML RadioButton rb2;
-	@FXML ImageView logo;
-	
+
+	@FXML
+	ListView<String> jdkList;
+	@FXML
+	TextField workspacePath;
+	@FXML
+	RadioButton rb1;
+	@FXML
+	RadioButton rb2;
+	@FXML
+	ImageView logo;
+
 	/**
 	 * Creates a new controller for the setup page.
 	 * Start graphics by calling {@link #start()}
@@ -59,13 +64,13 @@ public class SetupController extends AnchorPane {
 	public SetupController() {
 		//Init final variable
 		tgGroup = new ToggleGroup();
-		
+
 		//Init dat files
 		workspaceDat = new File("res/workspace/workspace.dat");
 		JDKDat = new File("res/JDK/JDK.dat");
-		defaultJDKDat = new File ("res/JDK/DefaultJDK.dat");
+		defaultJDKDat = new File("res/JDK/DefaultJDK.dat");
 	}
-	
+
 	/**
 	 * Initializes and displays the setup window graphics.
 	 */
@@ -83,71 +88,71 @@ public class SetupController extends AnchorPane {
 			stage.setResizable(false);
 			stage.setScene(scene);
 			stage.initStyle(StageStyle.UNDECORATED);
-			
+
 			//Init graphical components
 			initialize();
-			
+
 			//display stage
 			stage.showAndWait();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Initializes graphical components
 	 */
 	private void initialize() {
-		
+
 		//Set dark mode
 		var stylesheets = stage.getScene().getStylesheets();
 		var darkMode = getClass().getResource("/zenit/ui/projectinfo/mainStyle.css")
 				.toExternalForm();
 		stylesheets.add(darkMode);
-		
+
 		//Load logo
 		logo.setImage(new Image(getClass().getResource("/zenit/setup/zenit.png")
 				.toExternalForm()));
 		logo.setFitWidth(55);
-		
+
 		//Load OS default JDKs if none are saved
 		if (!JDKDat.exists()) {
 			JREVersions.createNew();
 		}
-		
+
 		//Load in set workspace if it exist
-		if (workspaceDat.exists()) {	
+		if (workspaceDat.exists()) {
 			try {
 				workspaceFile = WorkspaceHandler.readWorkspace();
 				workspacePath.setText(workspaceFile.getPath());
 			} catch (IOException e) {
 				e.printStackTrace();
-			}	
+			}
 		}
 
 		initRadioButtons();
-		
+
 		updateList();
 	}
-	
+
 	/**
 	 * Setup the radio buttons and put them in their default state
 	 */
 	private void initRadioButtons() {
 		rb1.setToggleGroup(tgGroup);
 		rb2.setToggleGroup(tgGroup);
-		
+
 		if (workspaceFile == null) {
 			rb2.setSelected(true);
 		} else {
 			rb1.setSelected(true);
 		}
-		
+
 		rbListener = new RadioButtonListener();
 		tgGroup.selectedToggleProperty().addListener(rbListener);
 	}
-	
+
 	/**
 	 * Updates the JDK list by reading from file. Add JDK to res/JDK.dat before triggering
 	 * Sorts the list.
@@ -155,13 +160,13 @@ public class SetupController extends AnchorPane {
 	public void updateList() {
 		//Init list of JDKs
 		List<String> JDKs = getJDKs();
-	
+
 		//Add to list
 		jdkList.getItems().clear();
 		jdkList.getItems().addAll(JDKs);
-		
+
 		//Sort
-		jdkList.getItems().sort((o1,o2)->{
+		jdkList.getItems().sort((o1, o2) -> {
 			return o1.compareTo(o2);
 		});
 	}
@@ -170,7 +175,7 @@ public class SetupController extends AnchorPane {
 		List<String> JDKs = JREVersions.readString();
 
 		String defaultJDK = getDefaultJDK();
-		if(JDKs.contains(defaultJDK)) {
+		if (JDKs.contains(defaultJDK)) {
 			JDKs.remove(defaultJDK);
 			JDKs.add(defaultJDK + " [default]");
 		}
@@ -186,9 +191,9 @@ public class SetupController extends AnchorPane {
 		}
 		return defaultJDK;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@FXML
 	private void browse() {
@@ -196,23 +201,23 @@ public class SetupController extends AnchorPane {
 		dc.setTitle("Choose a workspace");
 		dc.setInitialDirectory(new File(System.getProperty("user.home")));
 		File newWorkspace = dc.showDialog(stage);
-		
+
 		if (newWorkspace != null) {
 			workspaceFile = newWorkspace;
 			workspacePath.setText(workspaceFile.getPath());
 			toggleRadiobutton(true);
-		} else if (newWorkspace == null && workspacePath.getText().equals("")){
+		} else if (newWorkspace == null && workspacePath.getText().equals("")) {
 			toggleRadiobutton(false);
 		}
 	}
-	
+
 	@FXML
 	private void addJDK() {
 		DirectoryChooser dc = new DirectoryChooser();
 		dc.setTitle("Choose JDK to add");
 		dc.setInitialDirectory(JREVersions.getJVMDirectory());
 		File newJDK = dc.showDialog(stage);
-		
+
 		if (newJDK != null) {
 			if (jdkList.getItems().contains(newJDK.getName())) {
 				DialogBoxes.errorDialog("JDK already exist in list", "", "A JDK with that name"
@@ -227,72 +232,72 @@ public class SetupController extends AnchorPane {
 			}
 		}
 	}
-	
+
 	@FXML
 	private void removeJDK() {
 		String removeJDKName = jdkList.getSelectionModel().getSelectedItem();
-		
+
 		if (removeJDKName != null) {
-			
+
 			if (removeJDKName.endsWith(" [default]")) {
 				DialogBoxes.errorDialog("Can't remove default JDK", "", "Can't remove the default "
 						+ "JDK, choose another default JDK to remove this one");
 				return;
-			} else if (jdkList.getItems().size() == 1){
+			} else if (jdkList.getItems().size() == 1) {
 				int choice = DialogBoxes.twoChoiceDialog("Remove the last JDK from list", "",
 						"There is only one JDK remaining in the list. Are you sure you want to "
-						+ "remove it? At least one JDK is needed to run Zenit", "Yes, remove", 
-						
+								+ "remove it? At least one JDK is needed to run Zenit", "Yes, remove",
+
 						"No, keep it");
 				if (choice == 0 || choice == 2) {
 					return;
 				}
 			}
-			
+
 			String removeJDKPath = JREVersions.getFullPathFromName(removeJDKName);
 			File removeJDKFile = new File(removeJDKPath);
 			JREVersions.remove(removeJDKFile);
-		
+
 			updateList();
 		} else {
 			DialogBoxes.errorDialog("Choose JDK to remove", "", "Choose a JDK from the list to "
 					+ "remove it");
-		}	
+		}
 	}
-	
+
 	@FXML
 	private void setDefaultJDK() {
 		String defaultJDKName = jdkList.getSelectionModel().getSelectedItem();
-		
+
 		if (defaultJDKName != null) {
 			String defaultJDKPath = JREVersions.getFullPathFromName(defaultJDKName);
 			File deaultJDKFile = new File(defaultJDKPath);
 			JREVersions.setDefaultJDKFile(deaultJDKFile);
-		
+
 			updateList();
 		} else {
 			DialogBoxes.errorDialog("Choose JDK to make default", "", "Choose a JDK from the list to "
 					+ "make it the default");
 		}
 	}
-	
+
 	@FXML
 	private void quit() {
 		System.exit(0);
 	}
-	
+
 	@FXML
 	private void done() {
 
 		//Check if workspace input text has been updated since save
 		boolean notSavedWorkspace = true;
-		
+
 		while (notSavedWorkspace) {
-			if (tgGroup.getSelectedToggle().equals(rb1) && workspaceFile != null && 
+			if (tgGroup.getSelectedToggle().equals(rb1) && workspaceFile != null &&
 					!workspaceFile.getPath().equals(workspacePath.getText())) {
 				int choice = DialogBoxes.twoChoiceDialog("Save changes to workspace", "",
-						"The changes to workspace has not been saved, would you like: " + 
-						workspacePath.getText() + " to be your workspace?", "Yes", "No");
+						"The changes to workspace has not been saved, would you like: " +
+								workspacePath.getText() + " to be your workspace?", "Yes", "No");
 				if (choice == 1) {
 					onEnter();
 				} else {
@@ -302,7 +307,7 @@ public class SetupController extends AnchorPane {
 				notSavedWorkspace = false;
 			}
 		}
-		
+
 		//Check if default workspace is selected
 		if (tgGroup.getSelectedToggle().equals(rb2)) {
 			String userPath = System.getProperty("user.home");
@@ -314,7 +319,7 @@ public class SetupController extends AnchorPane {
 			}
 			workspaceFile = defaultWorkspace;
 		}
-		
+
 		if (!workspaceFile.exists() || !JDKDat.exists() || !defaultJDKDat.exists()) {
 			DialogBoxes.errorDialog("Missing files", "", "Please enter the required information to"
 					+ " launch Zenit");
@@ -328,7 +333,7 @@ public class SetupController extends AnchorPane {
 	private void onEnter() {
 		String input = workspacePath.getText();
 		File file = new File(input);
-		
+
 		if (file.exists() && file.isDirectory()) {
 			workspaceFile = file;
 			toggleRadiobutton(true);
@@ -337,20 +342,20 @@ public class SetupController extends AnchorPane {
 					+ " workspace must be a directory");
 			toggleRadiobutton(false);
 		} else if (!file.exists()) {
-			int choice = DialogBoxes.twoChoiceDialog("Folder doesn't exist", "", "The folder " + 
-					input + " doesn't exist. Would you like to create it?", "Yes, create folder",
+			int choice = DialogBoxes.twoChoiceDialog("Folder doesn't exist", "", "The folder " +
+							input + " doesn't exist. Would you like to create it?", "Yes, create folder",
 					"No, don't create folder");
-			
+
 			if (choice == 1) {
 				if (file.mkdir()) {
-					DialogBoxes.informationDialog("Folder created", "The folder " + input + 
+					DialogBoxes.informationDialog("Folder created", "The folder " + input +
 							" is now created.");
 					workspaceFile = file;
 					toggleRadiobutton(true);
 				} else {
 					DialogBoxes.errorDialog("Folder couldn't be created", "", "The folder " +
 							input + " couldn't be created. You can only create a folder in an"
-									+ " existing folder");
+							+ " existing folder");
 					toggleRadiobutton(false);
 				}
 			} else {
@@ -358,9 +363,10 @@ public class SetupController extends AnchorPane {
 			}
 		}
 	}
-	
+
 	/**
 	 * Sets the path to document folder depending on current OS
+	 *
 	 * @return path from OS.home to documents folder
 	 */
 	private String getDocumentsPath() {
@@ -375,11 +381,12 @@ public class SetupController extends AnchorPane {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Used to toggle a radio button without triggering the changed event
+	 *
 	 * @param toggleOwn {@code true} if "Own workspace" should be selected,
-	 * otherwise {@code false}
+	 *                  otherwise {@code false}
 	 */
 	private void toggleRadiobutton(boolean toggleOwn) {
 		tgGroup.selectedToggleProperty().removeListener(rbListener);
@@ -392,23 +399,31 @@ public class SetupController extends AnchorPane {
 		}
 		tgGroup.selectedToggleProperty().addListener(rbListener);
 	}
-	
+
 	private class RadioButtonListener implements ChangeListener<Toggle> {
 
 		@Override
 		public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-            if (tgGroup.getSelectedToggle().equals(rb1)) {
-            	if (workspacePath.getText().equals("")) {
-            		browse();
-            	} else {
-            		onEnter();
-            	}
-            }
+			if (tgGroup.getSelectedToggle().equals(rb1)) {
+				if (workspacePath.getText().equals("")) {
+					browse();
+				} else {
+					onEnter();
+				}
+			}
 		}
 	}
 
 	public File getJDKDat() {
 		return JDKDat;
 	}
-	
+
+
+	public boolean handleCloseAction() {
+		int choice = DialogBoxes.unsavedModificationsDialogSimple();
+		if (choice == 1) {
+			return true;
+		} else return choice == 2;
+	}
+
 }
