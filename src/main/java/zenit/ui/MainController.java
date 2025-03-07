@@ -1094,7 +1094,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		if (file == null) {
 			file = new File("Untitled");
 		}
-		
+
 		FileTab exisingTab = getTabFromFile(file);
 		if (exisingTab != null) {
 			tabPane.getSelectionModel().select(exisingTab);

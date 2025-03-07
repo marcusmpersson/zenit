@@ -129,6 +129,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		if (newFile != null) {
 			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), FileTreeItem.CLASS, false);
 			parent.getChildren().add(newItem);
+			sortChildren(parent);
 		}
 	}
 
@@ -238,6 +239,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			if (packageFile != null) {
 				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName(), FileTreeItem.PACKAGE, false);
 				selectedItem.getChildren().add(packageNode);
+				sortChildren(selectedItem);
 			}
 		} else if (actionEvent.getSource().equals(importJar)) {
 			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
@@ -253,5 +255,19 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			itemToMove = null;
 			dropItem.setVisible(false);
 		}
+	}
+
+	private void sortChildren(FileTreeItem<String> parent) {
+		parent.getChildren().sort((o1, o2) -> {
+			FileTreeItem<String> f1 = (FileTreeItem<String>) o1;
+			FileTreeItem<String> f2 = (FileTreeItem<String>) o2;
+			if (f1.getType() == FileTreeItem.PACKAGE && f2.getType() != FileTreeItem.PACKAGE) {
+				return -1;
+			} else if (f1.getType() != FileTreeItem.PACKAGE && f2.getType() == FileTreeItem.PACKAGE) {
+				return 1;
+			} else {
+				return f1.getValue().compareTo(f2.getValue());
+			}
+		});
 	}
 }

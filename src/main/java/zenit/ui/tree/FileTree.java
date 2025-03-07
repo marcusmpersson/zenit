@@ -44,9 +44,19 @@ public class FileTree {
 				}
 			}
 		}
-		
-		items.sort((a, b) -> a.getFile().getName().compareToIgnoreCase(b.getFile().getName()));
-		
+
+		items.sort((a,b) -> {
+			if(a.getFile().isDirectory() && !b.getFile().isDirectory()) {
+				return -1;
+			}
+			else if(!a.getFile().isDirectory() && b.getFile().isDirectory()) {
+				return 1;
+			}
+			else {
+				return a.getFile().getName().compareToIgnoreCase(b.getFile().getName());
+			}
+		});
+
 		for (var item : items) {
 			parent.getChildren().add(item);
 		}
@@ -73,23 +83,30 @@ public class FileTree {
 		
 		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type, false);
 		parent.getChildren().add(item);
+
 		parent.getChildren().sort((a, b) -> {
 			try {
 				var fa = (FileTreeItem<String>) a;
 				var fb = (FileTreeItem<String>) b;
-				
-				return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+
+				if(fa.getFile().isDirectory() && !fb.getFile().isDirectory()) {
+					return -1;
+				} else if (!fa.getFile().isDirectory() && fb.getFile().isDirectory()) {
+					return 1;
+				} else {
+					return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+				}
 			}
 			catch (ClassCastException ex) {
 				return 0;
 			}
 		});
-		
+
 		if (file.isDirectory()) {
 			createNodes(item, file);
 		}
 	}
-	
+
 	/**
 	 * Updates the corresponding file to all the children of a node.
 	 * @param parent The parent node to update children nodes
