@@ -165,6 +165,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private MenuItem copy;
 
 	@FXML
+	private MenuItem paste;
+
+	@FXML
 	private MenuItem selectAll;
 
 	@FXML
@@ -671,6 +674,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 		FileTab selectedTab = getSelectedTab();
 		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
 		zenCodeArea.copy();
+	}
+
+	@FXML
+	private void paste(ActionEvent event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		zenCodeArea.paste();
 	}
 
 	// Edit fliken, select all
