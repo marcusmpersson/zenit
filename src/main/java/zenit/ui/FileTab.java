@@ -274,6 +274,10 @@ public class FileTab extends Tab {
 		this.initialTitle = file == null ? "Untitled" : file.getName();
 
 		setText(initialTitle);
+
+		if (file != null) {
+			zenCodeArea.setCompletionFileName(file.getName());
+		}
 		
 		if (shouldSetContent && file != null) {
 			setFileText(FileController.readFile(file));

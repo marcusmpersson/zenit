@@ -28,6 +28,9 @@ public class JDKTest {
         assert JDKDir != null && JDKDir.exists();
 
         for(File JDK : JDKDir.listFiles()) {
+            if (JDK.isHidden()) {
+                continue;
+            }
             File[] files = JDK.listFiles();
             assert files != null;
             for(File file : files) {

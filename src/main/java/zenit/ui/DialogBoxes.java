@@ -4,11 +4,8 @@ import java.io.File;
 import java.util.Optional;
 
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import main.java.zenit.filesystem.FileController;
 
@@ -128,7 +125,8 @@ public class DialogBoxes {
 		}
 	}
 
-	public void unsavedModificationsDialog(File file, String content) {
+
+    public void unsavedModificationsDialog(File file, String content) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setTitle("Unsaved modifications");
 		alert.setHeaderText("You have unsaved modifications");
@@ -151,6 +149,29 @@ public class DialogBoxes {
 				Platform.exit();
 			}
 		}
+	}
+	public static int unsavedModificationsDialogSimple() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Unsaved modifications");
+		alert.setHeaderText("You have unsaved modifications");
+		alert.setContentText("Do you want to save them before closing?");
+
+		ButtonType save = new ButtonType("Save");
+		ButtonType noSave = new ButtonType("Don't save");
+		ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+		alert.getButtonTypes().setAll(save, noSave, cancel);
+
+		Optional<ButtonType> result = alert.showAndWait();
+
+		if (result.isPresent()) {
+			if (result.get() == save) {
+				return 1;
+			} else if (result.get() == noSave) {
+				return 2;
+			}
+		}
+		return 3;
 	}
 
 
