@@ -18,8 +18,6 @@ import main.java.zenit.filesystem.FileController;
 import main.java.zenit.util.StringUtilities;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
-import javax.swing.plaf.PanelUI;
-
 /**
  * A Tab extension that holds a File.
  * @author Pontus Laos
