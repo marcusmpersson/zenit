@@ -8,6 +8,7 @@ import main.java.zenit.ui.MainController;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
@@ -79,7 +80,7 @@ public class JavaSourceCodeCompiler {
 	public String getJDKPath() {
 		return cmb.getJDK();
 	}
-	
+
 	/**
 	 * Class for creating commands for compiling, and redirecting process-streams.
 	 */
@@ -124,12 +125,12 @@ public class JavaSourceCodeCompiler {
 		 */
 		protected void decodeMetadata() {
 			Metadata metadata = new Metadata(metadataFile);
-			
+
 			JDKPath = metadata.getJREVersion();
 			directory = metadata.getDirectory();
 			sourcepath = metadata.getSourcepath();
 			internalLibraries = metadata.getInternalLibraries();
-			externalLibraries = metadata.getExternalLibraries();	
+			externalLibraries = metadata.getExternalLibraries();
 		}
 
 		/**
@@ -144,6 +145,7 @@ public class JavaSourceCodeCompiler {
 			cmb.setRunPath(file.getPath());
 
 			String command = cmb.generateCommand();
+			System.out.println("Command #2" + command);
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;
@@ -196,12 +198,18 @@ public class JavaSourceCodeCompiler {
 		 */
 		protected String createRunPathInProject() {
 			File projectFile = metadataFile.getParentFile();
-			String runPath = file.getPath();
 			String projectPath = projectFile.getPath();
 
-			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
+			ArrayList<String> javaFiles = new ArrayList<>();
+			findJavaFiles(projectFile, javaFiles);
 
-			return runPath;
+			StringBuilder javaFilePaths = new StringBuilder();
+			for (String path: javaFiles) {
+				javaFilePaths.append(path.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), ""));
+				javaFilePaths.append(" ");
+			}
+
+			return javaFilePaths.toString().stripTrailing();
 		}
 
 		/**
@@ -215,6 +223,24 @@ public class JavaSourceCodeCompiler {
 
 			Executors.newSingleThreadExecutor().submit(inStream);
 			Executors.newSingleThreadExecutor().submit(errorStream);
+		}
+	}
+
+	/**
+	 * Searches for all the java files in the given folder and all of its sub folders recursively
+	 * @param folder folder from which we are searching
+	 * @param javaFiles list of currently found java files to be populated with more java files
+	 */
+	private void findJavaFiles(File folder, ArrayList<String> javaFiles) {
+		File[] files = folder.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isDirectory()) {
+					findJavaFiles(file, javaFiles);
+				} else if (file.isFile() && file.getName().endsWith(".java")) {
+					javaFiles.add(file.getPath());
+				}
+			}
 		}
 	}
 
@@ -279,7 +305,8 @@ public class JavaSourceCodeCompiler {
 		}
 		
 		private Process runFileInPackage() {
-			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
+			// For projects, there always need to be a Main class to run
+			runPath = new File("Main");
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
 			cb.setJDK(JDKPath);
@@ -298,9 +325,8 @@ public class JavaSourceCodeCompiler {
 			}
 					
 			String command = cb.generateCommand();
-			
 			Process process = executeCommand(command, projectFile);
-			
+
 			// Runs command
 			redirectStreams(process);
 			
@@ -313,6 +339,6 @@ public class JavaSourceCodeCompiler {
 			newRunPath = newRunPath.replaceAll(".java", "");
 			
 			return newRunPath;
-		}	
+		}
 	}
 }

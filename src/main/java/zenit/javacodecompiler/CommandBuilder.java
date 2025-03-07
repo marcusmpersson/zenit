@@ -1,5 +1,6 @@
 package main.java.zenit.javacodecompiler;
 
+import main.java.zenit.Zenit;
 import main.java.zenit.filesystem.jreversions.JDKVerifier;
 import main.java.zenit.filesystem.jreversions.JREVersions;
 
@@ -103,6 +104,80 @@ public class CommandBuilder {
 	}
 
 	public String generateCommand() {
+		String OS = Zenit.OS.toLowerCase();
+		return OS.startsWith("win") ? winCommand() : unixCommand();
+	}
+
+	private String winCommand() {
+		StringBuilder command = new StringBuilder();
+		command.append("\"").append(JDK).append("\"");
+
+		if (VMArguments != null) {
+			command.append(" ").append(VMArguments);
+		}
+
+		mergeLibraries();
+
+		if (libraries != null && libraries.length > 0) {
+			command.append(" -cp \"");
+			if (tool.equals(RUN)) {
+				command.append(directory).append(";");
+			}
+			command.append(String.join(";",libraries));
+			command.append("\"");
+		}
+
+		finalizeCommand(command);
+		return command.toString();
+	}
+
+	private String unixCommand() {
+		StringBuilder command = new StringBuilder();
+		command.append(JDK);
+
+		if (VMArguments != null) {
+			command.append(" ").append(VMArguments);
+		}
+
+		mergeLibraries();
+
+		if (libraries != null && libraries.length > 0) {
+			command.append(" -cp ");
+			if (tool.equals(RUN)) {
+				command.append("./").append(directory).append(":");
+			}
+			command.append("./").append(String.join(":",libraries));
+			command.append(":.");
+		}
+
+		finalizeCommand(command);
+		return command.toString();
+	}
+
+	private void finalizeCommand(StringBuilder command) {
+		if (directory != null && tool.equals(COMPILE)) {
+			command.append(" -d ").append(directory);
+		}
+
+		if (sourcepath != null) {
+			command.append(" ").append(sourcepath);
+		}
+
+		if (runPath != null && tool.equals(RUN)) {
+			command.append(" ").append(runPath.replace(File.separator, "/"));
+		}
+
+		if (tool.equals(COMPILE)) {
+			command.append(" ").append(runPath);
+		}
+
+		if (programArguments != null) {
+			command.append(" ").append(programArguments);
+		}
+	}
+
+	@Deprecated
+	public String generateCommandOld() {
 		String command = JDK;
 		
 		if (VMArguments != null) {
@@ -112,22 +187,22 @@ public class CommandBuilder {
 		mergeLibraries();
 		
 		if(tool.equals(RUN) && directory != null) {
-			command += " -cp ./" + directory;
+			command += " -cp " + directory;
 		}
-		
+
 		if (libraries != null) {
 			if (tool.equals(COMPILE)) {
 				command += " -cp " + libraries[0];
 				if (libraries.length > 1) {
 					for (int i = 1; i < libraries.length; i++) {
-						command += ":" + libraries[i];
+						command += File.pathSeparatorChar + libraries[i];
 					}
 				}
 			} else if (tool.equals(RUN)) {
 				for (int i = 0; i < libraries.length; i++) {
-					command += ":." + File.separator + libraries[i];
+					command += File.pathSeparatorChar + libraries[i];
 				}
-				command += ":.";
+				//command += ":.";
 			}
 		}
 
