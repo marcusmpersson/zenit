@@ -3,6 +3,7 @@ package main.java.zenit.zencodearea;
 import javafx.concurrent.Task;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import main.java.zenit.completions.CompletionModule;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 
 public class ZenCodeArea extends CodeArea {
 	private ExecutorService executor;
+	private CompletionModule completionModule;
 //	private int fontSize;
 //	private String font;
 
@@ -97,6 +99,21 @@ public class ZenCodeArea extends CodeArea {
 		});
 
 		this.requestFocus();
+
+		completionModule = new CompletionModule(this);
+
+		this.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			if (event.isControlDown() && event.getCode() == KeyCode.SPACE) {
+				completionModule.showCompletions();
+				event.consume();
+			}
+		});
+	}
+
+	public void setCompletionFileName(String fileName) {
+		if (completionModule != null) {
+			completionModule.setCurrentFileName(fileName);
+		}
 	}
 
 	public ArrayList<String> codeSuggestionArray(){
