@@ -3,6 +3,7 @@ package main.java.zenit.filesystem;
 import main.java.zenit.exceptions.TypeCodeException;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.helpers.FileNameHelpers;
+import main.java.zenit.ui.NewFileController;
 
 import java.io.*;
 import java.util.logging.Logger;
@@ -124,6 +125,7 @@ public class JavaFileHandler extends FileHandler {
 	 */
 	protected static File renameFile(File oldFile, String newFilename) throws IOException {
 
+
 		File tempFile = FileNameHelpers.getFilepathWithoutTopFile(oldFile); // Removes file name
 
 		// Create new file with new name
@@ -131,6 +133,7 @@ public class JavaFileHandler extends FileHandler {
 		File newFile = new File(newFilepath);
 
 		if (newFile.exists()) {
+			NewFileController.renameFile(newFilename);
 			throw new IOException("File already exists");
 		}
 

@@ -243,7 +243,7 @@ public class FileController {
 	 * @param newName New name of file
 	 * @return Renamed file if renamed, otherwise null
 	 */
-	public File renameFile(File file, String newName) {
+	public File renameFile(File file, String newName) throws IOException {
 		File newFile = null;
 		if (file != null && newName != null) {
 			try {
@@ -254,7 +254,7 @@ public class FileController {
 				}
 			} catch (IOException ex) {
 				System.err.println("FileController.renameFile: " + ex.getMessage());
-				NewFileController.renameFile(newName);
+				throw ex;
 			}
 		}
 		return newFile;
