@@ -128,6 +128,15 @@ public class NewFileController extends AnchorPane {
 		}
 		
 	}
+
+	public static void renameFile(String newName){
+		DialogBoxes.errorDialog(
+				"Rename Failed",
+				"File already exists",
+				"A file with the name \"" + newName + "\" already exists. Please choose a different name."
+		);
+
+	}
 	
 	@FXML
 	private void cancel() {

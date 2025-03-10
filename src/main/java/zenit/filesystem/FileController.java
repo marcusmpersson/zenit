@@ -3,6 +3,7 @@ package main.java.zenit.filesystem;
 import javafx.stage.Stage;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.metadata.Metadata;
+import main.java.zenit.ui.NewFileController;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -253,6 +254,7 @@ public class FileController {
 				}
 			} catch (IOException ex) {
 				System.err.println("FileController.renameFile: " + ex.getMessage());
+				NewFileController.renameFile(newName);
 			}
 		}
 		return newFile;
