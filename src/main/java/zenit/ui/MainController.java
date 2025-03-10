@@ -57,6 +57,9 @@ import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 /**
  * The controller part of the main GUI.
@@ -106,6 +109,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	@FXML
 	private MenuItem openFile;
+
+	@FXML
+	private MenuItem openFolder;
 
 	@FXML
 	private MenuItem saveFile;
@@ -660,6 +666,26 @@ public class MainController extends VBox implements ThemeCustomizable {
 			ex.printStackTrace();
 		}
 	}
+
+	@FXML
+	private void openFolder(Event event) throws IOException {
+		try {
+			DirectoryChooser directoryChooser = new DirectoryChooser();
+			File workspace = fileController.getWorkspace();
+			if (workspace != null) {
+				directoryChooser.setInitialDirectory(fileController.getWorkspace());
+			}
+			File folder = directoryChooser.showDialog(stage);
+
+			if (folder != null) {
+				File target = fileController.importProject(folder);
+				FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+				FileTree.createParentNode(root, target);
+			}
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
+    }
 
 	// Edit fliken, cut
 	@FXML

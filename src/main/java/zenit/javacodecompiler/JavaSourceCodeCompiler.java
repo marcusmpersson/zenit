@@ -145,7 +145,7 @@ public class JavaSourceCodeCompiler {
 			cmb.setRunPath(file.getPath());
 
 			String command = cmb.generateCommand();
-			System.out.println("Command #2" + command);
+			//System.out.println("Command #2" + command);
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;
