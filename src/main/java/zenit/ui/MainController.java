@@ -1445,7 +1445,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		List<File> jarFiles = (List<File>) fileChooser.showOpenMultipleDialog(stage);
 
 		if (jarFiles != null) {
-			boolean success = fileController.chooseAndImportLibrary(stage, (List<File>) projectFile);
+			boolean success = fileController.addInternalLibraries(jarFiles, projectFile);
 			if (success) {
 				main.java.zenit.ui.DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
 			} else {
