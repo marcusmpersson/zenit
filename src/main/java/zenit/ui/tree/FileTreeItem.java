@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Extension of the TreeItem class with the ability to save a corresponding File-object
@@ -95,5 +97,18 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 		
 		return stringType;
+	}
+
+	public boolean isRunnableJavaClass(File file) {
+		if (file.getName().endsWith(".java")) {
+			try {
+				// Check if the file contains a main method
+				String content = new String(Files.readAllBytes(file.toPath()));
+				return content.contains("public static void main(String[] args)");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 }

@@ -22,6 +22,7 @@
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<?import javafx.scene.control.ComboBox?>
 <fx:root prefHeight="640.0" prefWidth="900.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
@@ -192,6 +193,7 @@
 																</Button>
 															</children>
 														</HBox>
+														<ComboBox fx:id="comboBox" layoutX="500.0" layoutY="1.0" prefWidth="150.0"/>
 													</children>
 												</AnchorPane>
 												<AnchorPane fx:id="consoleRoot" prefHeight="269.0" prefWidth="667.0">
