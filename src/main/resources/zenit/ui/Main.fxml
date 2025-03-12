@@ -139,9 +139,10 @@
                         <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
 						<MenuItem fx:id="paste" onAction="#paste" text="Paste">
-                     <accelerator>
+                     <!--<accelerator>
                         <KeyCodeCombination alt="UP" code="V" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
+                     </accelerator>-->
+						</MenuItem>
 						<MenuItem disable="true" mnemonicParsing="false" text="Delete" visible="false" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="selectAll" onAction="#selectAll" text="Select All">
