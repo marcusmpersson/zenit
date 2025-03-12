@@ -66,12 +66,28 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		renameItem.setText(renameItemTitle);
 		deleteItem.setText(deleteItemTitle);
 				
-		if (selectedNode.equals("src") && !createItem.getItems().contains(createPackage)) {
+		/*if (!createItem.getItems().contains(createPackage)) {
 			createItem.getItems().add(createPackage);
-		} /*else {
-			createItem.getItems().remove(createPackage);
 		}*/
+
 		FileTreeItem<String> selectedItem = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
+		if (selectedItem.getFile().isDirectory()) {
+			if (!getItems().contains(createItem)) {
+				getItems().add(0, createItem); // Add createItem at the top
+			}
+			if (!createItem.getItems().contains(createPackage)) {
+				createItem.getItems().add(createPackage);
+			}
+			if (!createItem.getItems().contains(createClass)) {
+				createItem.getItems().add(createClass);
+			}
+			if (!createItem.getItems().contains(createInterface)) {
+				createItem.getItems().add(createInterface);
+			}
+		} else {
+			getItems().remove(createItem);
+		}
+
 		if (selectedItem.getType() == FileTreeItem.PROJECT) {
 			getItems().add(importJar);
 			getItems().add(properties);
