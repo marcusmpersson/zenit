@@ -232,8 +232,16 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				updateOpenTabs(selectedFile, newFile);
 			}
 		} else if (actionEvent.getSource().equals(deleteItem)) {
-			controller.deleteFile(selectedFile);
-			selectedItem.getParent().getChildren().remove(selectedItem);
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Delete File");
+			alert.setHeaderText("Are you sure you want to delete this file?");
+			alert.setContentText("File: " + selectedFile.getName());
+
+			ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
+			if (result == ButtonType.OK) {
+				controller.deleteFile(selectedFile);
+				selectedItem.getParent().getChildren().remove(selectedItem);
+			}
 		} else if (actionEvent.getSource().equals(createPackage)) {
 			File packageFile = controller.newPackage(selectedFile);
 			if (packageFile != null) {

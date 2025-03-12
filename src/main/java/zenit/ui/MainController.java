@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
+import com.sun.jna.platform.FileUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -873,7 +874,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 //		historyIndex++;
 //		System.out.println(historyIndex);
 
-		deletedFile.set(file, FileController.readFile(file));
+		/*deletedFile.set(file, FileController.readFile(file));
 		fileController.deleteFile(file);
 
 
@@ -883,6 +884,30 @@ public class MainController extends VBox implements ThemeCustomizable {
 			for (var tab : tabs) {
 				var fileTab = (FileTab) tab;
 				
+				if (fileTab != null && fileTab.getFile().equals(file)) {
+					Platform.runLater(() -> closeTab(null));
+					return;
+				}
+			}
+		}*/
+
+		try {
+			FileUtils fileUtils = FileUtils.getInstance();
+			if (fileUtils.hasTrash()) {
+				fileUtils.moveToTrash(new File[]{file});
+			} else {
+				file.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		var tabs = tabPane.getTabs();
+
+		if (tabs != null) {
+			for (var tab : tabs) {
+				var fileTab = (FileTab) tab;
+
 				if (fileTab != null && fileTab.getFile().equals(file)) {
 					Platform.runLater(() -> closeTab(null));
 					return;
