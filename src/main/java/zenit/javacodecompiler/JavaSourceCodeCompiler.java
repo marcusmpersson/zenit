@@ -199,17 +199,11 @@ public class JavaSourceCodeCompiler {
 		protected String createRunPathInProject() {
 			File projectFile = metadataFile.getParentFile();
 			String projectPath = projectFile.getPath();
+			String runPath = file.getPath();
 
-			ArrayList<String> javaFiles = new ArrayList<>();
-			findJavaFiles(projectFile, javaFiles);
+			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
 
-			StringBuilder javaFilePaths = new StringBuilder();
-			for (String path: javaFiles) {
-				javaFilePaths.append(path.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), ""));
-				javaFilePaths.append(" ");
-			}
-
-			return javaFilePaths.toString().stripTrailing();
+			return runPath;
 		}
 
 		/**
@@ -305,8 +299,7 @@ public class JavaSourceCodeCompiler {
 		}
 		
 		private Process runFileInPackage() {
-			// For projects, there always need to be a Main class to run
-			runPath = new File("Main");
+			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
 			cb.setJDK(JDKPath);
@@ -323,7 +316,7 @@ public class JavaSourceCodeCompiler {
 				cb.setProgramArguments(rc.getPaArguments());
 				cb.setVMArguments(rc.getVmArguments());
 			}
-					
+
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);
 
