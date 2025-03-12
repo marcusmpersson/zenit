@@ -112,13 +112,12 @@ public class CommandBuilder {
 
 		mergeLibraries();
 
+		if (tool.equals(RUN)) {
+			command.append(" -cp ").append(directory);
+		}
+
 		if (libraries != null && libraries.length > 0) {
-			command.append(" -cp \"");
-			if (tool.equals(RUN)) {
-				command.append(directory).append(";");
-			}
-			command.append(String.join(";",libraries));
-			command.append("\"");
+			command.append("\"").append(String.join(";",libraries)).append("\"");
 		}
 
 		finalizeCommand(command);
@@ -135,14 +134,15 @@ public class CommandBuilder {
 
 		mergeLibraries();
 
-		if (libraries != null && libraries.length > 0) {
-			command.append(" -cp ");
-			if (tool.equals(RUN)) {
-				command.append("./").append(directory).append(":");
-			}
-			command.append("./").append(String.join(":",libraries));
-			command.append(":.");
+		if (tool.equals(RUN)) {
+			command.append(" -cp ").append("./").append(directory).append(":");
 		}
+
+		if (libraries != null && libraries.length > 0) {
+			command.append("./").append(String.join(":",libraries)).append(":");
+		}
+
+		command.append(".");
 
 		finalizeCommand(command);
 		return command.toString();
