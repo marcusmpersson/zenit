@@ -68,9 +68,9 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				
 		if (selectedNode.equals("src") && !createItem.getItems().contains(createPackage)) {
 			createItem.getItems().add(createPackage);
-		} else {
+		} /*else {
 			createItem.getItems().remove(createPackage);
-		}
+		}*/
 		FileTreeItem<String> selectedItem = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
 		if (selectedItem.getType() == FileTreeItem.PROJECT) {
 			getItems().add(importJar);
@@ -239,8 +239,8 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 
 			ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
 			if (result == ButtonType.OK) {
-				controller.deleteFile(selectedFile);
-				selectedItem.getParent().getChildren().remove(selectedItem);
+			controller.deleteFile(selectedFile);
+			selectedItem.getParent().getChildren().remove(selectedItem);
 			}
 		} else if (actionEvent.getSource().equals(createPackage)) {
 			File packageFile = controller.newPackage(selectedFile);
