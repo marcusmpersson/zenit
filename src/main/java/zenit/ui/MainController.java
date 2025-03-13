@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -42,6 +43,7 @@ import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
 import main.java.zenit.setup.SetupController;
+import main.java.zenit.ui.projectinfo.ProjectInfoErrorHandling;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -1571,6 +1573,20 @@ public class MainController extends VBox implements ThemeCustomizable {
 			}
 		}
 		return jarFiles;
+	}
+
+	public void removeLibraries(List<String> libraryPaths, ProjectFile projectFile) {
+		List<String> relativeLibraryPaths = new ArrayList<>();
+		File projectRoot = new File(projectFile.getPath());
+
+		for (String absolutePath : libraryPaths) {
+			Path absolute = Paths.get(absolutePath);
+			Path root = projectRoot.toPath();
+			Path relative = root.relativize(absolute);
+
+			relativeLibraryPaths.add(relative.toString());
+		}
+		fileController.removeInternalLibraries(relativeLibraryPaths, projectFile);
 	}
 	
 	/**

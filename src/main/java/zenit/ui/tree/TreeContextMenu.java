@@ -15,6 +15,7 @@ import main.java.zenit.ui.MainController;
 import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -256,8 +257,16 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 
 			ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
 			if (result == ButtonType.OK) {
-			controller.deleteFile(selectedFile);
-			selectedItem.getParent().getChildren().remove(selectedItem);
+				if (selectedFile.getName().toLowerCase().endsWith(".jar")) {
+					ProjectFile projectFile = new ProjectFile(getProjectRootFile().getPath());
+					List<String> libraryPaths = new ArrayList<>();
+					libraryPaths.add(String.valueOf(selectedFile));
+					controller.removeLibraries(libraryPaths, projectFile);
+					selectedItem.getParent().getChildren().remove(selectedItem);
+				} else {
+					controller.deleteFile(selectedFile);
+					selectedItem.getParent().getChildren().remove(selectedItem);
+				}
 			}
 		} else if (actionEvent.getSource().equals(createPackage)) {
 			File packageFile = controller.newPackage(selectedFile);
@@ -306,5 +315,18 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				return f1.getValue().compareTo(f2.getValue());
 			}
 		});
+	}
+
+	private File getProjectRootFile() {
+		FileTreeItem<String> workspaceRoot = (FileTreeItem<String>) treeView.getRoot();
+		if (workspaceRoot != null) {
+			for (TreeItem<String> child : workspaceRoot.getChildren()) {
+				FileTreeItem<String> projectItem = (FileTreeItem<String>) child;
+				if (projectItem.getType() == FileTreeItem.PROJECT) {
+					return projectItem.getFile();
+				}
+			}
+		}
+		return null;
 	}
 }
