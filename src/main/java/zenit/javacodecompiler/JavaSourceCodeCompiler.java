@@ -5,7 +5,9 @@ import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -34,6 +36,7 @@ public class JavaSourceCodeCompiler {
 	protected Buffer<?> buffer;
 	protected MainController cont;
 	protected ConsoleController consoleController;
+	protected CommandBuilder cmb;
 
 	/**
 	 * Creates a new JavaSourceCodeCompiler for single classes without metadata-file.
@@ -59,7 +62,7 @@ public class JavaSourceCodeCompiler {
 		this.buffer = buffer;
 		this.cont = cont;
 	}
-	
+
 	/**
 	 * Starts a new thread to compile.
 	 */
@@ -73,7 +76,11 @@ public class JavaSourceCodeCompiler {
 	public void startCompileAndRun() {
 		new CompileAndRun().start();
 	}
-	
+
+	public String getJDKPath() {
+		return cmb.getJDK();
+	}
+
 	/**
 	 * Class for creating commands for compiling, and redirecting process-streams.
 	 */
@@ -133,12 +140,12 @@ public class JavaSourceCodeCompiler {
 		 * @return Executed process.
 		 */
 		protected Process compile() {
-			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
-			cb.setJDK(JDKPath);
-			cb.setRunPath(file.getPath());
+			cmb = new CommandBuilder(CommandBuilder.COMPILE);
+			cmb.setJDK(JDKPath);
+			cmb.setRunPath(file.getPath());
 
-			String command = cb.generateCommand();
-			System.out.println("Command #2" + command);
+			String command = cmb.generateCommand();
+			//System.out.println("Command #2" + command);
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;
@@ -192,17 +199,11 @@ public class JavaSourceCodeCompiler {
 		protected String createRunPathInProject() {
 			File projectFile = metadataFile.getParentFile();
 			String projectPath = projectFile.getPath();
+			String runPath = file.getPath();
 
-			ArrayList<String> javaFiles = new ArrayList<>();
-			findJavaFiles(projectFile, javaFiles);
-			
-			StringBuilder javaFilePaths = new StringBuilder();
-			for (String path: javaFiles) {
-				javaFilePaths.append(path.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), ""));
-				javaFilePaths.append(" ");
-			}
+			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
 
-			return javaFilePaths.toString().stripTrailing();
+			return runPath;
 		}
 
 		/**
@@ -298,8 +299,7 @@ public class JavaSourceCodeCompiler {
 		}
 		
 		private Process runFileInPackage() {
-			// For projects, there always need to be a Main class to run
-			runPath = new File("Main");
+			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
 			cb.setJDK(JDKPath);
@@ -316,7 +316,7 @@ public class JavaSourceCodeCompiler {
 				cb.setProgramArguments(rc.getPaArguments());
 				cb.setVMArguments(rc.getVmArguments());
 			}
-					
+
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);
 

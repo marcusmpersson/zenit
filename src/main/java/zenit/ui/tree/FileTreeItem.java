@@ -30,21 +30,22 @@ public class FileTreeItem<T> extends TreeItem<T> {
 
 
     private ImageView icon;
+	private ImageView playIcon;
     
 	
 	/**
 	 * @param file Corresponding file
 	 * @param name
 	 */
-	public FileTreeItem(File file, T name, int type) {
+	public FileTreeItem(File file, T name, int type, boolean test) {
 		super(name);
 		this.file = file;
 		this.type = type;
 		
-		setIcon();
+		setIcon(test);
 	}
 	
-	public void setIcon() {
+	public void setIcon(boolean test) {
 		String url = null;
 		switch(type) {
 		case PROJECT: url = "/zenit/ui/tree/project.png"; break;
@@ -55,16 +56,42 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		case FILE: url = "/zenit/ui/tree/file.png"; break;
 		case INCOMPATIBLE: url = "/zenit/ui/tree/incompatible.png"; break;
 		}
-		
-		if (url != null) {
-			icon = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
-			icon.setFitHeight(16);
-			icon.setFitWidth(16);
-			icon.setSmooth(true);
-			this.setGraphic(icon);
+
+		if (!test) {
+			if (url != null) {
+				icon = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
+				icon.setFitHeight(16);
+				icon.setFitWidth(16);
+				icon.setSmooth(true);
+				this.setGraphic(icon);
+			}
+
+
+			if (isRunnableJavaClass(file)) {
+				addPlayIcon();
+			}
 		}
 	}
-	
+
+	public void addPlayIcon() {
+		if (playIcon == null) {
+			playIcon = new ImageView(new Image(getClass().getResource("/zenit/ui/tree/play.png").toExternalForm()));
+			playIcon.setFitHeight(16);
+			playIcon.setFitWidth(16);
+			playIcon.setSmooth(true);
+
+			// Add play icon to the right of the class icon
+			this.setGraphic(new javafx.scene.layout.HBox(5, icon, playIcon));
+		}
+	}
+
+	public void removePlayIcon() {
+		if (playIcon != null) {
+			this.setGraphic(icon);
+			playIcon = null;
+		}
+	}
+
 	/**
 	 * Set the corresponding file
 	 */
@@ -110,5 +137,9 @@ public class FileTreeItem<T> extends TreeItem<T> {
 			}
 		}
 		return false;
+	}
+
+	public ImageView getPlayIcon() {
+		return playIcon;
 	}
 }

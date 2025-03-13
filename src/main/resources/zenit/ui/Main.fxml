@@ -46,10 +46,18 @@
       						<MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProject" text="New Project" />
                      </items>
                   </Menu>
-						<MenuItem fx:id="openFile" onAction="#openFile" text="Open…">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
+					<Menu mnemonicParsing="false" text="Open...">
+						<items>
+							<MenuItem fx:id="openFile" onAction="#openFile" text="Open file…">
+						   <accelerator>
+							  <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+						   </accelerator></MenuItem>
+							<MenuItem fx:id="openFolder" onAction="#openFolder" text="Open folder…">
+						   <accelerator>
+							  <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+						   </accelerator></MenuItem>
+						</items>
+					</Menu>
 						<Menu disable="true" mnemonicParsing="false" text="Open Recent" visible="false" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem onAction="#closeTab" text="Close">
@@ -131,10 +139,11 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-						<MenuItem text="Paste">
-                     <accelerator>
+						<MenuItem fx:id="paste" onAction="#paste" text="Paste">
+                     <!--<accelerator>
                         <KeyCodeCombination alt="UP" code="V" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
+                     </accelerator>-->
+						</MenuItem>
 						<MenuItem disable="true" mnemonicParsing="false" text="Delete" visible="false" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="selectAll" onAction="#selectAll" text="Select All">

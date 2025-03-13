@@ -36,7 +36,7 @@ public class FileTree {
 			itemName = files[index].getName();
 			if (!itemName.startsWith(".") && !itemName.equals("bin") && !itemName.endsWith(".class")) { //Doesn't include hidden files
 				type = calculateType(parent, files[index]);
-				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type);
+				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type, false);
 				items.add(item);
 				
 				if (files[index].isDirectory()) {
@@ -44,9 +44,19 @@ public class FileTree {
 				}
 			}
 		}
-		
-		items.sort((a, b) -> a.getFile().getName().compareToIgnoreCase(b.getFile().getName()));
-		
+
+		items.sort((a,b) -> {
+			if(a.getFile().isDirectory() && !b.getFile().isDirectory()) {
+				return -1;
+			}
+			else if(!a.getFile().isDirectory() && b.getFile().isDirectory()) {
+				return 1;
+			}
+			else {
+				return a.getFile().getName().compareToIgnoreCase(b.getFile().getName());
+			}
+		});
+
 		for (var item : items) {
 			parent.getChildren().add(item);
 		}
@@ -71,25 +81,32 @@ public class FileTree {
 		
 		int type = calculateType(parent, file);
 		
-		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
+		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type, false);
 		parent.getChildren().add(item);
+
 		parent.getChildren().sort((a, b) -> {
 			try {
 				var fa = (FileTreeItem<String>) a;
 				var fb = (FileTreeItem<String>) b;
-				
-				return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+
+				if(fa.getFile().isDirectory() && !fb.getFile().isDirectory()) {
+					return -1;
+				} else if (!fa.getFile().isDirectory() && fb.getFile().isDirectory()) {
+					return 1;
+				} else {
+					return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+				}
 			}
 			catch (ClassCastException ex) {
 				return 0;
 			}
 		});
-		
+
 		if (file.isDirectory()) {
 			createNodes(item, file);
 		}
 	}
-	
+
 	/**
 	 * Updates the corresponding file to all the children of a node.
 	 * @param parent The parent node to update children nodes
@@ -199,6 +216,10 @@ public class FileTree {
 		} 
 		//Text-file
 		else if (itemName.endsWith(".txt")) {
+			type = FileTreeItem.FILE;
+		}
+		//Jar-file
+		else if (itemName.endsWith(".jar")) {
 			type = FileTreeItem.FILE;
 		}
 		else if (file.isFile() && itemName.indexOf('.') == -1) {

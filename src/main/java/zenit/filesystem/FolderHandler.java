@@ -4,6 +4,9 @@ import main.java.zenit.filesystem.helpers.FileNameHelpers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Methods for creating, renaming and deleting folders.
@@ -36,27 +39,19 @@ public class FolderHandler {
 	 * or if {@link java.io.File#renameTo(File) renameTo} throws an exception
 	 */
 	protected static File renameFolder(File file, String newFolderName) throws IOException {
-		
 		if (newFolderName.equals("package")) {
 			throw new IOException("Can't rename package to: " + newFolderName);
 		}
-		
-		File tempFile = FileNameHelpers.getFilepathWithoutTopFile(file); //Removes file name
-		
-		//Create new file
-		String newFilepath = tempFile.getPath() + "/" + newFolderName;
-		File newFile = new File(newFilepath);
-		
-		//Check if file exists
-		if (newFile.exists()) {
-			throw new IOException("File already exists");
+
+		Path sourcePath = file.toPath();
+		Path newFolderPath = sourcePath.resolveSibling(newFolderName);
+		File newFile = newFolderPath.toFile();
+
+		if (Files.exists(newFolderPath)) {
+			throw new IOException("Folder already exists: " + newFolderPath);
 		}
-		
-		//Rename file
-		boolean success = file.renameTo(newFile);
-		if (!success) {
-			throw new IOException("Couldn't rename file");
-		}
+
+		Files.move(sourcePath, newFolderPath, StandardCopyOption.ATOMIC_MOVE);
 	
 		return newFile;
 	}
