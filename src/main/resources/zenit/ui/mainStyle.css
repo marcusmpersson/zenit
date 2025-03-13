@@ -250,6 +250,18 @@
 .split-pane:vertical > .split-pane-divider {
 }
 
+#comboBox {
+	-fx-background-color: #444444;
+	-fx-border-width: 1;
+	-fx-border-color: black;
+	-fx-text-fill: white;
+}
+
+#comboBox .list-cell {
+	-fx-text-fill: white;
+	-fx-background-color: #444444;
+}
+
 /* #iconRun{
 	-fx-icon-color: rgb(0,200,0);
 } */
