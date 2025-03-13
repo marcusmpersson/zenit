@@ -6,26 +6,32 @@ bin/*
 *.log
 
 #Workspace file
-res/workspace/workspace.dat
-.idea
-zenit.iml
+res/workspace/
+
+#IDE-specific files
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+
+#OS-specific files
+.DS_Store
+Thumbs.db
+
+#Maven build
+target/
+!target/.gitkeep  # Allows keeping the empty target directory if needed
+*.war
+*.ear
+
+#Maven compilation metadata
+target/maven-archiver/
+target/maven-status/
 
 #JDK files
 res/JDK/DefaultJDK.dat
 res/JDK/JDK.dat
 
-/bin/
-.classpath
-target/classes/zenit/ui/actionButtons.css
-target/classes/zenit/ui/Foo.java
-target/classes/zenit/ui/Main.fxml
-target/classes/zenit/ui/keywords.css
-target/maven-archiver/pom.properties
-target/zenit-1.0.0-SNAPSHOT.jar
-target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
-target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-target/classes/zenit/ui/mainStyle.css
-/target/
-/lib/javafx-sdk-21.0.6/
-.idea
-zenit.iml
+#Dependency files
+/lib/javafx-sdk-*/
