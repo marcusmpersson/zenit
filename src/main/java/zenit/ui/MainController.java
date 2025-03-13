@@ -18,15 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -85,6 +77,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private Process process;
 	
 	private Tuple<File, String> deletedFile = new Tuple<>();
+	private List<File> runnableClasses;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -177,7 +170,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	@FXML
 	private MenuItem removeJAR;
 
-
+	@FXML
+	private ComboBox comboBox;
 
 
 	/**
@@ -331,6 +325,37 @@ public class MainController extends VBox implements ThemeCustomizable {
 		btnStop.setOnAction(event -> terminate());
 		initTree();
 		consoleController.setMainController(this);
+
+		comboBox.getItems().clear();
+
+		runnableClasses = new ArrayList<>();
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		traverseFileTree(root, runnableClasses);
+
+		for (File file : runnableClasses) {
+			comboBox.getItems().add(file.getName());
+		}
+		comboBox.setOnAction(event -> handleComboBox());
+	}
+
+	private void traverseFileTree(FileTreeItem<String> root, List<File> runnableClasses) {
+		if (root!=null) {
+			if (root.isRunnableJavaClass(root.getFile())) {
+				runnableClasses.add(root.getFile());
+			}
+			for (TreeItem<String> child : root.getChildren()) {
+				traverseFileTree((FileTreeItem<String>) child, runnableClasses);
+			}
+		}
+	}
+
+	private void handleComboBox() {
+		String selectedOption = comboBox.getValue().toString();
+		for (File file : runnableClasses) {
+			if (file.getName().equals(selectedOption)) {
+				openFile(file);
+			}
+		}
 	}
 
 	/**
