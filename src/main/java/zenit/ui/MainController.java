@@ -1553,7 +1553,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * build paths. Show dialog box if import failed or not.
 	 * @param projectFile Project to import jar-files to
 	 */
-	public void chooseAndImportLibraries(ProjectFile projectFile) {
+	public List<File> chooseAndImportLibraries(ProjectFile projectFile) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select jar file to import");
 
@@ -1570,6 +1570,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 				main.java.zenit.ui.DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
 			}
 		}
+		return jarFiles;
 	}
 	
 	/**

@@ -15,6 +15,7 @@ import main.java.zenit.ui.MainController;
 import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Class that extends {@link javafx.scene.control.ContextMenu} with static menu items with dynamic
@@ -267,7 +268,19 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			}
 		} else if (actionEvent.getSource().equals(importJar)) {
 			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
-			controller.chooseAndImportLibraries(projectFile);
+			List<File> libraries = controller.chooseAndImportLibraries(projectFile);
+			if (!libraries.isEmpty()) {
+				FileTreeItem<String> libNode = findTreeItem(new File(selectedFile, "lib"));
+
+				if (libNode != null) {
+					for (File jarFile : libraries) {
+						File newJar = new File(libNode.getFile(), jarFile.getName());
+						FileTreeItem<String> jarNode = new FileTreeItem<>(newJar, newJar.getName(), FileTreeItem.FILE, false);
+						libNode.getChildren().add(jarNode);
+					}
+					sortChildren(libNode);
+				}
+			}
 		} else if (actionEvent.getSource().equals(properties) && selectedItem.getType() == FileTreeItem.PROJECT) {
 			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
 			controller.showProjectProperties(projectFile);

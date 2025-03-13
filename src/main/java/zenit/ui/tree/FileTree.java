@@ -218,6 +218,10 @@ public class FileTree {
 		else if (itemName.endsWith(".txt")) {
 			type = FileTreeItem.FILE;
 		}
+		//Jar-file
+		else if (itemName.endsWith(".jar")) {
+			type = FileTreeItem.FILE;
+		}
 		else if (file.isFile() && itemName.indexOf('.') == -1) {
 			type = FileTreeItem.FILE;
 		} else {
