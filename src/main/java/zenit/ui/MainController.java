@@ -43,7 +43,6 @@ import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
 import main.java.zenit.setup.SetupController;
-import main.java.zenit.ui.projectinfo.ProjectInfoErrorHandling;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -347,15 +346,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 		initTree();
 		consoleController.setMainController(this);
 
-		comboBox.getItems().clear();
-
 		runnableClasses = new ArrayList<>();
-		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
-		traverseFileTree(root, runnableClasses);
-
-		for (File file : runnableClasses) {
-			comboBox.getItems().add(file.getName());
-		}
+		updateComboBox();
 		comboBox.setOnAction(event -> handleComboBox());
 	}
 
@@ -376,6 +368,17 @@ public class MainController extends VBox implements ThemeCustomizable {
 			if (file.getName().equals(selectedOption)) {
 				openFile(file);
 			}
+		}
+	}
+
+	public void updateComboBox() {
+		comboBox.getItems().clear();
+		runnableClasses.clear();
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		traverseFileTree(root, runnableClasses);
+
+		for (File file : runnableClasses) {
+			comboBox.getItems().add(file.getName());
 		}
 	}
 
@@ -1085,6 +1088,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 				}
 
 				updateFileTreeItem(file);
+				updateComboBox();
 			}
 			
 		} catch (Exception e) {
@@ -1196,12 +1200,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
 		FileTreeItem<String> item = FileTree.getTreeItemFromFile(root, file);
-
-		if (item == null) {
-			System.out.println("FileTreeItem is null for file: " + file.getAbsolutePath());
-		} else {
-			System.out.println("FileTreeItem found for file: " + file.getAbsolutePath());
-		}
 
 		if (item != null) {
 			zenCodeArea.setFileTreeItem(item);
