@@ -1050,15 +1050,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	public void compileAndRun(File file) {
 		File metadataFile = getMetadataFile(file);
-		ConsoleArea consoleArea;
-		
-	
-		if(isDarkMode) {
-			consoleArea = new ConsoleArea(file.getName(), null, "-fx-background-color:#444");
-		}
-		else {
-			consoleArea = new ConsoleArea(file.getName(), null, "-fx-background-color:#989898");
-		}
+
+		ConsoleArea consoleArea = getOrCreateConsole(file.getName());
 		consoleArea.setFileName(file.getName());
 		consoleController.newConsole(consoleArea);
 		openConsoleComponent();
@@ -1103,6 +1096,18 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	
 	
+	}
+
+	private ConsoleArea getOrCreateConsole(String fileName) {
+		for (ConsoleArea console : consoleController.getConsoleList()) {
+			if (console.getFileName().equals(fileName)) {
+				console.clear();
+				return console;
+			}
+		}
+
+		String backgroundColor = isDarkMode ? "-fx-background-color:#444" : "-fx-background-color:#989898";
+		return new ConsoleArea(fileName, null, backgroundColor);
 	}
 
 	private void updateFileTreeItem(File file) {
@@ -1638,10 +1643,16 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 	
 	public void openConsoleComponent() {
-		
-		consolePane.setVisible(true);
-		consolePane.setDisable(false);
-		splitPane.setDividerPosition(0, 0.85);
+		if (!consolePane.isVisible()) {
+			consolePane.setVisible(true);
+			consolePane.setDisable(false);
+		}
+
+		double currentPosition = splitPane.getDividerPositions()[0];
+		if (currentPosition > 0.9 || currentPosition < 0.1) {
+			splitPane.setDividerPosition(0, 0.85);
+		}
+
 		consolePane.setMinHeight(34.0);
 		
 		Node divider = splitPane.lookup(".split-pane-divider");
@@ -1650,9 +1661,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 			divider.setStyle("-fx-padding: 1");
 		}
 		splitPane.resize(splitPane.getWidth() + 2 , splitPane.getHeight() + 2);
-		
-		
-		
 	}
 
 

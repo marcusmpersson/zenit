@@ -305,6 +305,10 @@ public class ConsoleController implements Initializable {
 			c.setBackgroundColor(color);
 		}
 	}
+
+	public List<ConsoleArea> getConsoleList() {
+		return consoleList;
+	}
 	
 	/**
 	 * Performs initialization steps.
