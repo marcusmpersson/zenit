@@ -347,6 +347,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 		initTree();
 		consoleController.setMainController(this);
 
+		updateComboBox();
+		comboBox.setOnAction(event -> handleComboBox());
+	}
+
+	public void updateComboBox() {
 		comboBox.getItems().clear();
 
 		runnableClasses = new ArrayList<>();
@@ -356,7 +361,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		for (File file : runnableClasses) {
 			comboBox.getItems().add(file.getName());
 		}
-		comboBox.setOnAction(event -> handleComboBox());
+		comboBox.setValue(null);
 	}
 
 	private void traverseFileTree(FileTreeItem<String> root, List<File> runnableClasses) {
@@ -371,7 +376,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 
 	private void handleComboBox() {
-		String selectedOption = comboBox.getValue().toString();
+		Object selectedObject = comboBox.getValue();
+		if (selectedObject == null) {
+			return;
+		}
+		String selectedOption = selectedObject.toString();
 		for (File file : runnableClasses) {
 			if (file.getName().equals(selectedOption)) {
 				openFile(file);

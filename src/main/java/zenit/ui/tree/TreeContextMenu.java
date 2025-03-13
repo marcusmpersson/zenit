@@ -266,6 +266,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				} else {
 					controller.deleteFile(selectedFile);
 					selectedItem.getParent().getChildren().remove(selectedItem);
+					controller.updateComboBox();
 				}
 			}
 		} else if (actionEvent.getSource().equals(createPackage)) {
