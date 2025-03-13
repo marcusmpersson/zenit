@@ -1096,6 +1096,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 				}
 
 				updateFileTreeItem(file);
+				updateComboBox();
 			}
 			
 		} catch (Exception e) {
@@ -1194,7 +1195,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 			return exisingTab;
 		}
 
-		FileTab tab = new FileTab(createNewZenCodeArea(), this);
+		ZenCodeArea zenCodeArea = createNewZenCodeArea();
+		FileTab tab = new FileTab(zenCodeArea, this);
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tab.setUserData(file.getAbsolutePath());
 		tabPane.getTabs().add(tab);
@@ -1203,6 +1205,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 		selectionModel.select(tab);
 		
 		updateStatusRight("");
+
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		FileTreeItem<String> item = FileTree.getTreeItemFromFile(root, file);
+
+		if (item != null) {
+			zenCodeArea.setFileTreeItem(item);
+		}
 
 		return tab;
 	}
