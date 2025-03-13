@@ -480,8 +480,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 			file = new File(filepath);
 
 			file = fileController.createFile(file, typeCode);
-
-			openFile(file);
 		}
 		return file;
 	}
@@ -1185,7 +1183,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 			return exisingTab;
 		}
 
-		FileTab tab = new FileTab(createNewZenCodeArea(), this);
+		ZenCodeArea zenCodeArea = createNewZenCodeArea();
+		FileTab tab = new FileTab(zenCodeArea, this);
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tab.setUserData(file.getAbsolutePath());
 		tabPane.getTabs().add(tab);
@@ -1194,6 +1193,19 @@ public class MainController extends VBox implements ThemeCustomizable {
 		selectionModel.select(tab);
 		
 		updateStatusRight("");
+
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		FileTreeItem<String> item = FileTree.getTreeItemFromFile(root, file);
+
+		if (item == null) {
+			System.out.println("FileTreeItem is null for file: " + file.getAbsolutePath());
+		} else {
+			System.out.println("FileTreeItem found for file: " + file.getAbsolutePath());
+		}
+
+		if (item != null) {
+			zenCodeArea.setFileTreeItem(item);
+		}
 
 		return tab;
 	}

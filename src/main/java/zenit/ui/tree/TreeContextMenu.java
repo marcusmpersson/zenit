@@ -148,6 +148,8 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), FileTreeItem.CLASS, false);
 			parent.getChildren().add(newItem);
 			sortChildren(parent);
+
+			controller.openFile(newFile);
 		}
 	}
 
