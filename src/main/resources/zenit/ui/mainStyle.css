@@ -265,3 +265,50 @@
 /* #iconRun{
 	-fx-icon-color: rgb(0,200,0);
 } */
+
+/* Styling for the search bar */
+#searchBar, #replaceBar {
+    -fx-background-color: #333333;
+    -fx-padding: 5px;
+        -fx-border-color: transparent;
+        -fx-border-width: 0;
+        -fx-border-style: none;
+        -fx-background-radius: 0;
+        -fx-border-radius: 0;
+        -fx-effect: null;
+}
+
+#searchBar > HBox, #replaceBar > HBox {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+#searchField, #replaceField {
+    -fx-background-color: #444444;
+    -fx-text-fill: #EEEEEE;
+    -fx-border-color: #444444;
+    -fx-border-width: 0;
+    -fx-prompt-text-fill: #AAAAAA;
+    -fx-padding: 5px 10px;
+}
+
+#btnUp, #btnDown, #btnEsc, #btnReplaceOne, #btnReplaceAll, #btnAddReplace, #btnSpace {
+    -fx-background-color: transparent;
+    -fx-text-fill: #EEEEEE;
+    -fx-padding: 5px 10px;
+}
+
+#btnUp:hover, #btnDown:hover, #btnEsc:hover, #btnReplaceOne:hover, #btnReplaceAll:hover, #btnAddReplace:hover {
+    -fx-opacity: 0.7;
+    -fx-cursor: hand;
+}
+
+#btnEsc {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FF5555;
+}
+
+#lblOccurrences {
+    -fx-text-fill: #EEEEEE;
+    -fx-background-color: transparent;
+}
