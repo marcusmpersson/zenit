@@ -2,6 +2,9 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.ui.MainController;
@@ -22,21 +25,22 @@ public class OpenFolderTest {
     @Mock
     private FileController fileController;
 
-    @Mock
+
     private MainController mainController;
 
+    @Mock
     private TabPane tabPane;
     private AutoCloseable closeable;
 
     /*
     Before, the JavaFX toolkit was being initialized multiple times,
     which caused an IllegalStateException to be thrown.
-    When you run testOpenFile_FileIsNull alone,
+    When you run testOpenFile_FileIsNull() alone,
     the toolkit is initialized once, and the test passes.
-    However, when you add testOpenFile_FileSupported,
+    However, when you add testOpenFile_FileSupported(),
     the toolkit is initialized again, causing the failure.
 
-    To dix this, we can initialize the JavaFX toolkit once for all tests.
+    To fix this, we can initialize the JavaFX toolkit once for all tests.
     This can be done by adding a static block to the test class.
      */
     static {
@@ -50,7 +54,9 @@ public class OpenFolderTest {
         closeable = MockitoAnnotations.openMocks(this);
 
         tabPane = new TabPane();
-        mainController = new MainController(stage);
+        stage = mock(Stage.class);
+        fileController = mock(FileController.class);
+        mainController = new MainController(stage, tabPane, fileController);
     }
 
     @Test
@@ -63,8 +69,28 @@ public class OpenFolderTest {
 
     @Test
     public void testOpenFile_FileSupported() {
-        File file = new File("test.java");
-        mainController.openFile(file);
-        assertEquals(1, tabPane.getTabs().size());
+        Path tempFile = null;
+
+        // Create a temporary file
+        try {
+            tempFile = Files.createTempFile("test", ".java");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        File file = tempFile.toFile();
+
+        try {
+            mainController.openFile(file);
+            assertEquals(1, tabPane.getTabs().size());
+        } finally {
+            // Delete the temporary file
+            try {
+                Files.deleteIfExists(tempFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
