@@ -1668,4 +1668,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 			return null;
 		}
 	}
+
+	public int getNumberOfTabs() {
+		return tabPane.getTabs().size();
+	}
 }
