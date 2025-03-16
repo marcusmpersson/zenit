@@ -34,10 +34,11 @@ public class CodeSnippets {
 		
 		int index = classname.indexOf(".java");
 		classname = classname.substring(0, index);
-		
+
+		String packageDeclaration = packagename.isEmpty() ? "" : "package " + packagename + ";\n\n";
+
 		String codesnippet =
-				"package " + packagename + ";\n" + 
-				"\n" +
+				packageDeclaration +
 				"public class " + classname + " {\n" +
 				"\n" + 
 				"}";
@@ -55,10 +56,11 @@ public class CodeSnippets {
 		
 		int index = classname.indexOf(".java");
 		classname = classname.substring(0, index);
-		
+
+		String packageDeclaration = packagename.isEmpty() ? "" : "package " + packagename + ";\n\n";
+
 		String codesnippet =
-				"package " + packagename + "\n" + 
-				"\n" +
+				packageDeclaration +
 				"public interface " + classname + " {\n" +
 				"\n" + 
 				"}";

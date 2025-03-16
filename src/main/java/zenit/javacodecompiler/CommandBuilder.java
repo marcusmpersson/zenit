@@ -26,6 +26,10 @@ public class CommandBuilder {
 	public CommandBuilder(String tool) {
 		this.tool = tool;
 	}
+
+	public String getJDK() {
+		return JDK;
+	}
 	
 	public void setJDK(String JDK) {
 		//If project has special JDK
@@ -43,6 +47,8 @@ public class CommandBuilder {
 		if (this.JDK == null) {
 			this.JDK = tool;
 		}
+
+		//System.out.println("Using JDK: " + this.JDK);
 	}
 
 	public void setDirectory(String directory) {
@@ -98,57 +104,46 @@ public class CommandBuilder {
 	}
 
 	public String generateCommand() {
-		String OS = Zenit.OS.toLowerCase();
-		return OS.startsWith("win") ? winCommand() : unixCommand();
+		String os = Zenit.OS.toLowerCase();
+		boolean isWindows = os.startsWith("win");
+		return buildCommand(isWindows);
 	}
 
-	private String winCommand() {
+	private String buildCommand(boolean isWindows) {
 		StringBuilder command = new StringBuilder();
-		command.append("\"").append(JDK).append("\"");
+
+		if (isWindows) {
+			command.append("\"").append(JDK).append("\"");
+		} else {
+			command.append(JDK);
+		}
 
 		if (VMArguments != null) {
 			command.append(" ").append(VMArguments);
 		}
 
 		mergeLibraries();
+		String separator = isWindows ? ";" : ":";
+		command.append(" -cp ");
 
-		if (libraries != null && libraries.length > 0) {
-			command.append(" -cp \"");
-			if (tool.equals(RUN)) {
-				command.append(directory).append(";");
-			}
-			command.append(String.join(";",libraries));
+		if (isWindows) {
 			command.append("\"");
 		}
 
-		finalizeCommand(command);
-		return command.toString();
-	}
-
-	private String unixCommand() {
-		StringBuilder command = new StringBuilder();
-		command.append(JDK);
-
-		if (VMArguments != null) {
-			command.append(" ").append(VMArguments);
+		if (tool.equals(RUN)) {
+			command.append(isWindows ? directory + separator : "./" + directory + separator);
 		}
-
-		mergeLibraries();
 
 		if (libraries != null && libraries.length > 0) {
-			command.append(" -cp ");
-			if (tool.equals(RUN)) {
-				command.append("./").append(directory).append(":");
-			}
-			command.append("./").append(String.join(":",libraries));
-			command.append(":.");
+			command.append(String.join(separator, libraries)).append(separator);
 		}
 
-		finalizeCommand(command);
-		return command.toString();
-	}
+		command.append(".");
 
-	private void finalizeCommand(StringBuilder command) {
+		if (isWindows) {
+			command.append("\"");
+		}
+
 		if (directory != null && tool.equals(COMPILE)) {
 			command.append(" -d ").append(directory);
 		}
@@ -168,6 +163,7 @@ public class CommandBuilder {
 		if (programArguments != null) {
 			command.append(" ").append(programArguments);
 		}
+		return command.toString();
 	}
 
 	@Deprecated
