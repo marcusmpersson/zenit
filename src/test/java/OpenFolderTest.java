@@ -22,14 +22,8 @@ public class OpenFolderTest {
     @Mock
     private Stage stage;
 
-    @Mock
-    private FileController fileController;
-
-
     private MainController mainController;
 
-    @Mock
-    private TabPane tabPane;
     private AutoCloseable closeable;
 
     /*
@@ -53,10 +47,8 @@ public class OpenFolderTest {
         // Initialize mocks
         closeable = MockitoAnnotations.openMocks(this);
 
-        tabPane = new TabPane();
         stage = mock(Stage.class);
-        fileController = mock(FileController.class);
-        mainController = new MainController(stage, tabPane, fileController);
+        mainController = new MainController(stage);
     }
 
     @Test
@@ -64,8 +56,10 @@ public class OpenFolderTest {
         mainController.openFile((File) null);
 
         // Verify that no tabs are added when file is null
-        assertEquals(0, tabPane.getTabs().size());
+        assertEquals(0, mainController.getNumberOfTabs());
     }
+
+
 
     @Test
     public void testOpenFile_FileSupported() {
@@ -83,9 +77,9 @@ public class OpenFolderTest {
 
         try {
             mainController.openFile(file);
-            assertEquals(1, tabPane.getTabs().size());
+            assertEquals(1, mainController.getNumberOfTabs());
         } finally {
-            // Delete the temporary file
+
             try {
                 Files.deleteIfExists(tempFile);
             } catch (IOException e) {
@@ -93,4 +87,9 @@ public class OpenFolderTest {
             }
         }
     }
+
+
+
+
+
 }

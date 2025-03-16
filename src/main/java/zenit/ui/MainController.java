@@ -177,71 +177,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	@FXML
 	private MenuItem removeJAR;
 
-	public MainController(Stage stage, TabPane tabPane, FileController fileController) {
-		this.stage = stage;
-		this.tabPane = tabPane;
-		this.fileController = fileController;
-		this.dialog = new DialogBoxes();
-		this.setupController = new SetupController();
-		this.zenCodeAreasTextSize = 12;
-		this.zenCodeAreasFontFamily = "Menlo";
-		this.activeZenCodeAreas = new LinkedList<>();
-		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
-
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
-
-			File workspace = null;
-
-			try {
-				workspace = WorkspaceHandler.readWorkspace();
-			} catch (IOException ex) {
-				DirectoryChooser directoryChooser = new DirectoryChooser();
-				directoryChooser.setTitle("Select new workspace folder");
-				workspace = directoryChooser.showDialog(stage);
-			}
-
-			if (workspace != null) {
-				fileController.changeWorkspace(workspace);
-			}
-
-			loader.setRoot(this);
-			loader.setController(this);
-			loader.load();
-
-			Scene scene = new Scene(this);
-			scene.getStylesheets().add(getClass().getResource("/zenit/ui/mainStyle.css").toString());
-			scene.getStylesheets().add(getClass().getResource("/zenit/ui/keywords.css").toExternalForm());
-			stage.setScene(scene);
-			stage.setTitle("Zenit - " + workspace.getPath());
-
-			initialize();
-
-			stage.show();
-			KeyboardShortcuts.setupMain(scene, this);
-
-			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-
-			stage.setOnCloseRequest(event -> {
-				event.consume(); // Prevent immediate closing
-
-				boolean thereAreChanges = changesHaveBeenMade();
-
-				if (thereAreChanges) {
-					FileTab tab = getSelectedTab();
-					File file = tab.getFile();
-					String text = getZenCodeAreaContent();
-					dialog.unsavedModificationsDialog(file, text); // Show dialog and wait for user action
-				} else {
-					Platform.exit();
-				}
-			});
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
 	 * it.
@@ -805,11 +740,12 @@ public class MainController extends VBox implements ThemeCustomizable {
 		if (file != null && getTabFromFile(file) == null) {
 
 			if (supportedFileFormat(file)) {
-			
-			FileTab selectedTab = addTab();
+
+				FileTab selectedTab = addTab();
 			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
+
 			} else {
 				String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
 				DialogBoxes.errorDialog("Not supported", "File type not supported by Zenit", 
@@ -1236,6 +1172,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 
 		return null;
+	}
+
+	public int getNumberOfTabs() {
+		return tabPane.getTabs().size();
 	}
 
 	/**
