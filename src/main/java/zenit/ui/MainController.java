@@ -1099,8 +1099,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			
 			// TODO: handle exception
 		}
-	
-	
+
 	}
 
 	private void updateFileTreeItem(File file) {
@@ -1115,6 +1114,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			}
 		}
 	}
+
 
 	/**
 	 * If the file of the current tab is a .java file if will be compiled, into the

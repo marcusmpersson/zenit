@@ -85,6 +85,13 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 	}
 
+	public boolean methodHasPlayIcon(File file){
+		return playIcon != null;
+	}
+
+
+
+
 	public void removePlayIcon() {
 		if (playIcon != null) {
 			this.setGraphic(icon);
@@ -137,6 +144,12 @@ public class FileTreeItem<T> extends TreeItem<T> {
 			}
 		}
 		return false;
+	}
+
+	public void addIconIfMethodRunnable(File file){
+		if (isRunnableJavaClass(file)) {
+			addPlayIcon();
+		}
 	}
 
 	public ImageView getPlayIcon() {
