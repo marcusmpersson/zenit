@@ -937,6 +937,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 				var fileTab = (FileTab) tab;
 
 				if (fileTab != null && fileTab.getFile().equals(file)) {
+					fileTab.setHasChanged(false);
 					Platform.runLater(() -> closeTab(null));
 					return;
 				}

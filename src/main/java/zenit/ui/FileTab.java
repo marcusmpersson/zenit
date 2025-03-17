@@ -346,4 +346,8 @@ public class FileTab extends Tab {
 			mc.updateStatusRight((row+1) + " : " + (col+1));
 		}
 	}
+
+	public void setHasChanged(boolean hasChanged) {
+		this.hasChanged = hasChanged;
+	}
 }
