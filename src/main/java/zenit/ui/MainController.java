@@ -566,6 +566,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			System.out.println("Did not write.");
 		}
 
+		updateComboBox();
 		return didWrite;
 	}
 
