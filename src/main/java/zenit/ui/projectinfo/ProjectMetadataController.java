@@ -220,13 +220,13 @@ public class ProjectMetadataController extends AnchorPane {
 	 * Updates the list with data from metadata-file
 	 */
 	private void updateLists() {
-		internalLibrariesList.getItems().clear();
+		/*internalLibrariesList.getItems().clear();
 		String[] internalLibraries = metadata.getInternalLibraries();
 		if (internalLibraries != null) {
 			internalLibrariesList.getItems().clear();
 			internalLibrariesList.getItems().addAll(internalLibraries);
 			internalLibrariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		}
+		}*/
 		
 		externalLibrariesList.getItems().clear();
 		String[] externalLibraries = metadata.getExternalLibraries();
