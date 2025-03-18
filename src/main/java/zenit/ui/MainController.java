@@ -118,6 +118,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private MenuItem changeWorkspace;
 
 	@FXML
+	private MenuItem autogenerateWorkspace;
+
+	@FXML
 	private MenuItem JREVersions;
 	
 	@FXML
@@ -1271,6 +1274,41 @@ public class MainController extends VBox implements ThemeCustomizable {
 				stage.show();
 				DialogBoxes.errorDialog("Can't change workspace", "", "");
 			}
+		}
+	}
+
+	@FXML
+	public void autogenerateWorkspace() {
+		String userHome = System.getProperty("user.home");
+		Path desktopPath = Paths.get(userHome, "Desktop");
+
+		String workspaceCollectionName = "Zenit_Workspace";
+		String workspaceName = "NewWorkspace";
+		Path workspaceCollectionPath = desktopPath.resolve(workspaceCollectionName);
+		Path workspacePath = workspaceCollectionPath.resolve(workspaceName);
+
+		try {
+			if (!Files.exists(workspaceCollectionPath)) {
+				Files.createDirectories(workspaceCollectionPath);
+			}
+
+			int counter = 2;
+			while (Files.exists(workspacePath)) {
+				workspacePath = workspaceCollectionPath.resolve(workspaceName + "_" + counter);
+				counter++;
+			}
+
+			Files.createDirectories(workspacePath);
+			boolean success = fileController.changeWorkspace(workspacePath.toFile());
+
+			if (success) {
+				stage.close();
+				new Zenit().start(stage);
+			} else {
+				DialogBoxes.errorDialog("Can't change workspace", "", "");
+			}
+		} catch (Exception ex) {
+			DialogBoxes.errorDialog("Can't create workspace", "", ex.getMessage());
 		}
 	}
 

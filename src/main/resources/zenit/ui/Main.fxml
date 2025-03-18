@@ -113,6 +113,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                      </accelerator></MenuItem>
+						<MenuItem fx:id="autogenerateWorkspace" onAction="#autogenerateWorkspace" text="Autogenerate workspace"></MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="quit" onAction="#quit" text="Quit">
                      <accelerator>
