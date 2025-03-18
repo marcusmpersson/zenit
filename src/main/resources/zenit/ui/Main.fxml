@@ -225,9 +225,9 @@
 														<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="667.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5.0">
 															<Button fx:id="btnAddReplace" text="▶" />
 															<TextField fx:id="searchField" promptText="Search..." HBox.hgrow="ALWAYS"/>
+															<Label fx:id="lblOccurrences" alignment="CENTER" contentDisplay="CENTER" text=""/>
 															<Button fx:id="btnUp" text="↑" minWidth="43.5"/>
 															<Button fx:id="btnDown" text="↓" minWidth="43.5"/>
-															<Label fx:id="lblOccurrences" alignment="CENTER" contentDisplay="CENTER" text=""/>
 															<Button fx:id="btnEsc" text="X" minWidth="43.5"/>
 														</HBox>
 													</children>

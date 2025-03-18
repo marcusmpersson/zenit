@@ -6,6 +6,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Controller for the search bar in the main window. Handles search and replace functionality.
+ * @author Louis Brown
+ */
 public class SearchInFileController extends AnchorPane {
 	
 	@FXML 
@@ -44,6 +48,21 @@ public class SearchInFileController extends AnchorPane {
 	@FXML
 	private Button btnAddReplace;
 
+	/**
+	 * Constructor for the SearchInFileController
+	 * @param search The search object to use
+	 * @param searchField The search field
+	 * @param btnEsc The escape button
+	 * @param lblOccurrences The label for the occurrences
+	 * @param searchBar The search bar
+	 * @param btnUp The up button
+	 * @param btnDown The down button
+	 * @param replaceOne The replace one button
+	 * @param replaceAll The replace all button
+	 * @param addReplace The add replace button
+	 * @param replaceBar The replace bar
+	 * @param replaceField The replace field
+	 */
 	public SearchInFileController(Search search, TextField searchField, Button btnEsc, Label lblOccurrences, AnchorPane searchBar, Button btnUp
 			, Button btnDown, Button replaceOne, Button replaceAll, Button addReplace, AnchorPane replaceBar, TextField replaceField) {
 		this.search = search;
@@ -78,12 +97,14 @@ public class SearchInFileController extends AnchorPane {
 		}	
 	}
 
+	/**
+	 * Initializes the search bar and its functionality.
+	 */
 	private void initialize() {
 		searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 			search.clearZen();
 			makeNewSearch(searchField.getText());
 		});
-
 
 		btnEsc.setOnAction(event -> {
 			search.cleanZen();
