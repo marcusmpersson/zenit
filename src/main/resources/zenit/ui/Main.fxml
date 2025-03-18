@@ -208,7 +208,8 @@
 														<ComboBox fx:id="comboBox" layoutX="500.0" layoutY="1.0" prefWidth="150.0"/>
 													</children>
 												</AnchorPane>
-												<AnchorPane fx:id="replaceBar" prefHeight="30.0" minHeight="35" maxHeight="0" visible="false" managed="false">
+												<VBox prefWidth="667.0">
+												<AnchorPane fx:id="replaceBar" prefHeight="30.0" minHeight="35" maxHeight="30" visible="false" managed="false">
 													<children>
 														<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="667.0"
 															  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -220,7 +221,7 @@
 														</HBox>
 													</children>
 												</AnchorPane>
-												<AnchorPane fx:id="searchBar" prefHeight="30.0" minHeight="35" maxHeight="0" visible="false" managed="false">
+												<AnchorPane fx:id="searchBar" prefHeight="30.0" minHeight="35" maxHeight="30" visible="false" managed="false">
 													<children>
 														<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="667.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5.0">
 															<Button fx:id="btnAddReplace" text="▶" />
@@ -232,7 +233,7 @@
 														</HBox>
 													</children>
 												</AnchorPane>
-												<AnchorPane fx:id="consoleRoot" prefHeight="269.0" prefWidth="667.0">
+												<AnchorPane fx:id="consoleRoot" prefHeight="269.0" prefWidth="667.0" VBox.vgrow="ALWAYS">
 													<children>
 														<AnchorPane fx:id="consolePane" minHeight="34" prefHeight="269.0" prefWidth="667.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
 															<children>
@@ -241,6 +242,7 @@
 														</AnchorPane>
 													</children>
 												</AnchorPane>
+												</VBox>
 											</items>
 										</SplitPane>
 									</children>
