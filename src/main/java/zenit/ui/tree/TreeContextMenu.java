@@ -4,15 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.helpers.FileNameHelpers;
 import main.java.zenit.ui.MainController;
 
-import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +23,7 @@ import java.util.List;
 public class TreeContextMenu extends ContextMenu implements EventHandler<ActionEvent>{
 	
 	private MainController controller;
+	private FileTreeUpdater fileTreeUpdater;
 	private TreeView<String> treeView;
 	
 	private Menu createItem = new Menu("New...");
@@ -51,9 +48,10 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	 * @param treeView The {@link javafx.scene.control.TreeView TreeView} instance which will
 	 * be manipulated
 	 */
-	public TreeContextMenu(MainController controller, TreeView<String> treeView) {
+	public TreeContextMenu(MainController controller, FileTreeUpdater fileTreeUpdater, TreeView<String> treeView) {
 		super();
 		this.controller = controller;
+		this.fileTreeUpdater = fileTreeUpdater;
 		this.treeView = treeView;
 		initContextMenu();
 	}
@@ -147,7 +145,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		if (newFile != null) {
 			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), FileTreeItem.CLASS, false);
 			parent.getChildren().add(newItem);
-			sortChildren(parent);
+			fileTreeUpdater.sortChildren(parent);
 
 			controller.openFile(newFile);
 		}
@@ -175,7 +173,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			TreeItem<String> parent = selectedItem.getParent();
 			parent.getChildren().remove(selectedItem);
 
-			FileTreeItem<String> newParent = findTreeItem(destinationDir);
+			FileTreeItem<String> newParent = fileTreeUpdater.findTreeItem(destinationDir);
 			if (newParent != null) {
 				newParent.getChildren().add(selectedItem);
 			}
@@ -208,23 +206,6 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				if (tabFilePath.equals(filePath)) {
 					return tab;
 				}
-			}
-		}
-		return null;
-	}
-
-	private FileTreeItem<String> findTreeItem(File file) {
-		return findTreeItem((FileTreeItem<String>) treeView.getRoot(), file);
-	}
-
-	private FileTreeItem<String> findTreeItem(FileTreeItem<String> root, File file) {
-		if (root.getFile().equals(file)) {
-			return root;
-		}
-		for (TreeItem<String> child : root.getChildren()) {
-			FileTreeItem<String> result = findTreeItem((FileTreeItem<String>) child, file);
-			if (result != null) {
-				return result;
 			}
 		}
 		return null;
@@ -276,23 +257,12 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			if (packageFile != null) {
 				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName(), FileTreeItem.PACKAGE, false);
 				selectedItem.getChildren().add(packageNode);
-				sortChildren(selectedItem);
+				fileTreeUpdater.sortChildren(selectedItem);
 			}
 		} else if (actionEvent.getSource().equals(importJar)) {
 			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
 			List<File> libraries = controller.chooseAndImportLibraries(projectFile);
-			if (!libraries.isEmpty()) {
-				FileTreeItem<String> libNode = findTreeItem(new File(selectedFile, "lib"));
-
-				if (libNode != null) {
-					for (File jarFile : libraries) {
-						File newJar = new File(libNode.getFile(), jarFile.getName());
-						FileTreeItem<String> jarNode = new FileTreeItem<>(newJar, newJar.getName(), FileTreeItem.FILE, false);
-						libNode.getChildren().add(jarNode);
-					}
-					sortChildren(libNode);
-				}
-			}
+			fileTreeUpdater.addLibrariesToFileTree(libraries, selectedFile);
 		} else if (actionEvent.getSource().equals(properties) && selectedItem.getType() == FileTreeItem.PROJECT) {
 			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
 			controller.showProjectProperties(projectFile);
@@ -304,20 +274,6 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			itemToMove = null;
 			dropItem.setVisible(false);
 		}
-	}
-
-	private void sortChildren(FileTreeItem<String> parent) {
-		parent.getChildren().sort((o1, o2) -> {
-			FileTreeItem<String> f1 = (FileTreeItem<String>) o1;
-			FileTreeItem<String> f2 = (FileTreeItem<String>) o2;
-			if (f1.getType() == FileTreeItem.PACKAGE && f2.getType() != FileTreeItem.PACKAGE) {
-				return -1;
-			} else if (f1.getType() != FileTreeItem.PACKAGE && f2.getType() == FileTreeItem.PACKAGE) {
-				return 1;
-			} else {
-				return f1.getValue().compareTo(f2.getValue());
-			}
-		});
 	}
 
 	private File getProjectRootFile() {
