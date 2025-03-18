@@ -6,11 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
-
-import java.util.LinkedList;
-import java.util.ArrayList;
 
 import com.sun.jna.platform.FileUtils;
 import javafx.application.Platform;
@@ -361,8 +358,26 @@ public class MainController extends VBox implements ThemeCustomizable {
 		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
 		traverseFileTree(root, runnableClasses);
 
+		Map<String, List<File>> nameToFiles = new HashMap<>();
 		for (File file : runnableClasses) {
-			comboBox.getItems().add(file.getName());
+			//comboBox.getItems().add(file.getName());
+			nameToFiles.computeIfAbsent(file.getName(), k -> new ArrayList<>()).add(file);
+		}
+
+		File workspace = FileController.getWorkspace();
+		String workspacePath = workspace.getPath();
+
+		for (Map.Entry<String, List<File>> entry : nameToFiles.entrySet()) {
+			String name = entry.getKey();
+			List<File> files = entry.getValue();
+			if (files.size() > 1) {
+				for (File file : files) {
+					String relativePath = file.getParent().replace(workspacePath, "");
+					comboBox.getItems().add(name + " [" + relativePath + "]");
+				}
+			} else {
+				comboBox.getItems().add(name);
+			}
 		}
 		comboBox.setValue(null);
 	}
