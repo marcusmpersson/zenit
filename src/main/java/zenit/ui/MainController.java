@@ -19,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -36,6 +37,7 @@ import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
+import main.java.zenit.searchinfile.SearchInFileController;
 import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
@@ -179,6 +181,39 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	@FXML
 	private ComboBox comboBox;
+
+	@FXML
+	private AnchorPane searchBar;
+
+	@FXML
+	private TextField searchField;
+
+	@FXML
+	private Button btnEsc;
+
+	@FXML
+	private Button btnUp;
+
+	@FXML
+	private Button btnDown;
+
+	@FXML
+	private Label lblOccurrences;
+
+	@FXML
+	private AnchorPane replaceBar;
+
+	@FXML
+	private TextField replaceField;
+
+	@FXML
+	private Button btnReplaceOne;
+
+	@FXML
+	private Button btnReplaceAll;
+
+	@FXML
+	private Button btnAddReplace;
 
 
 	/**
@@ -1412,7 +1447,31 @@ public class MainController extends VBox implements ThemeCustomizable {
 		if (selectedTab != null) {
 			ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
 			File file = selectedTab.getFile();
-			new Search(zenCodeArea, file, isDarkMode, this);
+
+			boolean isVisible = searchBar.isVisible();
+			boolean replaceVisible = replaceBar.isVisible();
+
+
+			if (!isVisible) {
+				searchBar.setPrefHeight(30);
+				searchBar.setMinHeight(35);
+			} else if (isVisible && replaceVisible) {
+				btnAddReplace.setText("▶");
+				replaceBar.setVisible(false);
+				replaceBar.setManaged(false);
+				replaceBar.setPrefHeight(0);
+				replaceBar.setMinHeight(0);
+				replaceBar.setMaxHeight(0);
+			}
+
+			searchBar.setVisible(!isVisible);
+			searchBar.setManaged(!isVisible);
+
+
+			new SearchInFileController(
+					new Search(zenCodeArea, file, isDarkMode, this),
+					searchField, btnEsc, lblOccurrences, searchBar, btnUp, btnDown, btnReplaceOne, btnReplaceAll, btnAddReplace, replaceBar, replaceField
+			);
 		}
 	}
 
