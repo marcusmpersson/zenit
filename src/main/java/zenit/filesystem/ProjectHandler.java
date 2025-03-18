@@ -1,6 +1,7 @@
 package main.java.zenit.filesystem;
 
 import main.java.zenit.filesystem.metadata.Metadata;
+import main.java.zenit.ui.DialogBoxes;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,13 @@ public class ProjectHandler extends FolderHandler {
 			
 			File metadata = MetadataFileHandler.createMetadataFile(file);
 			projectFile.setMetadata(metadata);
-			
+
+			int choice = DialogBoxes.twoChoiceDialog("New project : " + file.getName(), "",
+					"Would you like to add sample code?", "Yes", "No");
+
+			if (choice == 1) {
+				projectFile.addMainClass();
+			}
 
 		} else {
 			throw new IOException("Couldn't create project");

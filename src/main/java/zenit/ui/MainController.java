@@ -492,8 +492,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 			file = new File(filepath);
 
 			file = fileController.createFile(file, typeCode);
-
-			openFile(file);
 		}
 		return file;
 	}
@@ -1291,8 +1289,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 		String userHome = System.getProperty("user.home");
 		Path desktopPath = Paths.get(userHome, "Desktop");
 
-		String workspaceCollectionName = "Zenit_Workspace";
-		String workspaceName = "NewWorkspace";
+		String workspaceCollectionName = "Zenit";
+		String workspaceName = "Workspace";
 		Path workspaceCollectionPath = desktopPath.resolve(workspaceCollectionName);
 		Path workspacePath = workspaceCollectionPath.resolve(workspaceName);
 
