@@ -40,7 +40,6 @@ import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
 import main.java.zenit.setup.SetupController;
-import main.java.zenit.ui.projectinfo.ProjectInfoErrorHandling;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -48,10 +47,6 @@ import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 
 /**
  * The controller part of the main GUI.
@@ -264,6 +259,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return loader;
 	}
 
+	/**
+	 * Returns the tabpane.
+	 * @return The tabpane.
+	 * @author Louis Brown
+	 */
 	public TabPane getTabPane() {
 		return tabPane;
 	}
@@ -360,7 +360,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 		Map<String, List<File>> nameToFiles = new HashMap<>();
 		for (File file : runnableClasses) {
-			//comboBox.getItems().add(file.getName());
 			nameToFiles.computeIfAbsent(file.getName(), k -> new ArrayList<>()).add(file);
 		}
 
@@ -721,6 +720,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	}
 
+	/**
+	 * Opens a directory chooser and tries to read the file's name and content to the
+	 * currently selected tab.
+	 *
+	 * @param event
+	 * @author Louis Brown
+	 */
 	@FXML
 	private void openFolder(Event event) throws IOException {
 		try {
@@ -757,6 +763,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 		zenCodeArea.copy();
 	}
 
+	/**
+	 * Edit tab, paste button
+	 * @param event
+	 * @author Louis Brown
+	 */
 	@FXML
 	private void paste(ActionEvent event) {
 		FileTab selectedTab = getSelectedTab();
@@ -919,31 +930,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * Tries to delete a file or folder.
 	 * 
 	 * @param file The file to be deleted.
+	 * @author Louis Brown
 	 */
 	public void deleteFile(File file) {
-//		deletedTexts.put(file, FileController.readFile(file));
-//		
-//		fileHistory.add(0, file);
-//		historyIndex++;
-//		System.out.println(historyIndex);
-
-		/*deletedFile.set(file, FileController.readFile(file));
-		fileController.deleteFile(file);
-
-
-		var tabs = tabPane.getTabs();
-		
-		if (tabs != null) {
-			for (var tab : tabs) {
-				var fileTab = (FileTab) tab;
-				
-				if (fileTab != null && fileTab.getFile().equals(file)) {
-					Platform.runLater(() -> closeTab(null));
-					return;
-				}
-			}
-		}*/
-
 		try {
 			FileUtils fileUtils = FileUtils.getInstance();
 			if (fileUtils.hasTrash()) {
@@ -1138,6 +1127,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return new ConsoleArea(fileName, null, backgroundColor);
 	}
 
+	/**
+	 * Updates the tree item with a play icon if the file is a runnable Java class.
+	 * @param file
+	 * @author Louis Brown
+	 */
 	private void updateFileTreeItem(File file) {
 		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
 		FileTreeItem<String> item = FileTree.getTreeItemFromFile(root, file);
@@ -1201,6 +1195,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * 
 	 * @param onClick The Runnable to run when the tab should be closed.
 	 * @return The new Tab.
+	 * @author Louis Brown
 	 */
 	public FileTab addTab(File file) {
 		if (file == null) {
@@ -1299,6 +1294,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	}
 
+	/**
+	 * Creates a new workspace on the desktop.
+	 * @author Louis Brown
+	 */
 	@FXML
 	public void autogenerateWorkspace() {
 		String userHome = System.getProperty("user.home");
@@ -1735,6 +1734,14 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 
 
+	/**
+	 * Moves a file to a new directory.
+	 *
+	 * @param selectedFile    The file to move.
+	 * @param destinationDir  The directory to move the file to.
+	 * @return The moved file, or null if the move failed.
+	 * @author Louis Brown
+	 */
 	public File moveFile(File selectedFile, File destinationDir) {
 		if (!destinationDir.exists()) {
 			if (!destinationDir.mkdirs()) {

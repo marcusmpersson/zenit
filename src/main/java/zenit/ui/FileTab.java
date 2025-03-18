@@ -33,14 +33,6 @@ public class FileTab extends Tab {
 	
 	private boolean hasChanged;
 
-	public File getInitialFile() {
-		return initialFile;
-	}
-
-	public File getFilee() {
-		return file;
-	}
-
 
 	
 	/**
@@ -249,6 +241,7 @@ public class FileTab extends Tab {
 	/**
 	 * Returns the attached File.
 	 * @return The File.
+	 * @author Louis Brown
 	 */
 	public File getFile() {
 		return file;
@@ -347,6 +340,11 @@ public class FileTab extends Tab {
 		}
 	}
 
+	/**
+	 * Sets the hasChanged boolean to the given value.
+	 * @param hasChanged The value to set.
+	 * @author Louis Brown
+	 */
 	public void setHasChanged(boolean hasChanged) {
 		this.hasChanged = hasChanged;
 	}

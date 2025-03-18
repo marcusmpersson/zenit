@@ -11,7 +11,7 @@ import java.nio.file.Files;
 /**
  * Extension of the TreeItem class with the ability to save a corresponding File-object
  * in the instance.
- * @author Alexander Libot
+ * @author Alexander Libot, Louis Brown
  *
  * @param <T>
  */
@@ -73,6 +73,10 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 	}
 
+	/**
+	 * Add a play icon to the right of the class icon
+	 * @author Louis Brown
+	 */
 	public void addPlayIcon() {
 		if (playIcon == null) {
 			playIcon = new ImageView(new Image(getClass().getResource("/zenit/ui/tree/play.png").toExternalForm()));
@@ -85,6 +89,10 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 	}
 
+	/**
+	 * Remove the play icon from the right of the class icon
+	 * @author Louis Brown
+	 */
 	public void removePlayIcon() {
 		if (playIcon != null) {
 			this.setGraphic(icon);
@@ -126,6 +134,12 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		return stringType;
 	}
 
+	/**
+	 * Check if the given file is a Java class with a main method
+	 * @param file
+	 * @return boolean true if the file is a Java class with a main
+	 * @author Louis Brown
+	 */
 	public boolean isRunnableJavaClass(File file) {
 		if (file.getName().endsWith(".java")) {
 			try {
@@ -139,6 +153,11 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		return false;
 	}
 
+	/**
+	 * Get the play icon
+	 * @return ImageView playIcon
+	 * @author Louis Brown
+	 */
 	public ImageView getPlayIcon() {
 		return playIcon;
 	}

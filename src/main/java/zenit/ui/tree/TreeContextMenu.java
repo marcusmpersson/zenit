@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Class that extends {@link javafx.scene.control.ContextMenu} with static menu items with dynamic
  * text. Also contains event handler.
- * @author Alexander Libot
+ * @author Alexander Libot, Louis Brown
  *
  */
 public class TreeContextMenu extends ContextMenu implements EventHandler<ActionEvent>{
@@ -67,15 +67,11 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		String deleteItemTitle = String.format("Delete \"%s\"", selectedNode);
 		renameItem.setText(renameItemTitle);
 		deleteItem.setText(deleteItemTitle);
-				
-		/*if (!createItem.getItems().contains(createPackage)) {
-			createItem.getItems().add(createPackage);
-		}*/
 
 		FileTreeItem<String> selectedItem = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
 		if (selectedItem.getFile().isDirectory()) {
 			if (!getItems().contains(createItem)) {
-				getItems().add(0, createItem); // Add createItem at the top
+				getItems().add(0, createItem);
 			}
 			if (!createItem.getItems().contains(createPackage)) {
 				createItem.getItems().add(createPackage);
@@ -153,6 +149,12 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		}
 	}
 
+	/**
+	 * Moves a file to a new directory. Calls {@link main.java.zenit.ui.MainController#moveFile(File, File)}
+	 * @param selectedItem
+	 * @param destinationDir
+	 * @author Louis Brown
+	 */
 	private void moveFile(FileTreeItem<String> selectedItem, File destinationDir) {
 		File oldFile = selectedItem.getFile();
 		File newFile = new File(destinationDir, oldFile.getName());
@@ -191,6 +193,12 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		}
 	}
 
+	/**
+	 * Updates the open tabs in the TabPane.
+	 * @param oldFile
+	 * @param newFile
+	 * @author Louis Brown
+	 */
 	public void updateOpenTabs(File oldFile, File newFile) {
 		TabPane tabPane = controller.getTabPane();
 		Tab oldTab = findTabByFile(tabPane, oldFile);
@@ -200,6 +208,13 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		}
 	}
 
+	/**
+	 * Finds a tab by a file. Iterates through all tabs in the TabPane.
+	 * @param tabPane
+	 * @param file
+	 * @return Tab if found, null if not found
+	 * @author Louis Brown
+	 */
 	private Tab findTabByFile(TabPane tabPane, File file) {
 		String filePath = file.getAbsolutePath();
 		for (Tab tab : tabPane.getTabs()) {
@@ -213,10 +228,23 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		return null;
 	}
 
+	/**
+	 * Finds a tree item by a file.
+	 * @param file
+	 * @return FileTreeItem if found, null if not found
+	 * @author Louis Brown
+	 */
 	private FileTreeItem<String> findTreeItem(File file) {
 		return findTreeItem((FileTreeItem<String>) treeView.getRoot(), file);
 	}
 
+	/**
+	 * Finds a tree item by a file. Recursively searches through the tree.
+	 * @param root
+	 * @param file
+	 * @return FileTreeItem if found, null if not found
+	 * @author Louis Brown
+	 */
 	private FileTreeItem<String> findTreeItem(FileTreeItem<String> root, File file) {
 		if (root.getFile().equals(file)) {
 			return root;
@@ -306,6 +334,11 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		}
 	}
 
+	/**
+	 * Sorts the children of a parent node. Packages are sorted first, then classes, then other files.
+	 * @param parent The parent node to sort the children of.
+	 * @author Louis Brown
+	 */
 	private void sortChildren(FileTreeItem<String> parent) {
 		parent.getChildren().sort((o1, o2) -> {
 			FileTreeItem<String> f1 = (FileTreeItem<String>) o1;

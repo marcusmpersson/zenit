@@ -7,8 +7,16 @@ import java.nio.file.StandardOpenOption;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Tests for marking executable Java classes with a play icon in the file tree.
+ * @author Louis Brown
+ */
 public class MarkExecutableClassTest{
 
+    /**
+     * Test that a play icon is displayed on executable Java classes.
+     * @throws Exception
+     */
     @Test
     void testPlayIconOnExecutableClass() throws Exception {
         //creates a temporary file with main method

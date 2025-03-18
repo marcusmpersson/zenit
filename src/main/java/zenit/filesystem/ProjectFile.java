@@ -90,6 +90,11 @@ public class ProjectFile extends File {
 		return src;
 	}
 
+	/**
+	 * Adds a main class to the src-file
+	 * @throws IOException
+	 * @author Louis Brown
+	 */
 	public void addMainClass() throws IOException {
 		String mainClassPath = src.getPath() + File.separator + "Main.java";
 		File mainClass = new File(mainClassPath);

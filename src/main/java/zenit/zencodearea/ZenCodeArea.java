@@ -285,10 +285,20 @@ public class ZenCodeArea extends CodeArea {
 
     }
 
+	/**
+	 * Checks if the text contains a main method.
+	 * @param text The text to check
+	 * @author Louis Brown
+	 */
 	private boolean containsMainMethod(String text) {
 		return text.contains("public static void main(String[] args)");
 	}
 
+	/**
+	 * Adds or removes the play icon from the file tree item depending on if the text contains a main method.
+	 * @param item The file tree item to set
+	 * @author Louis Brown
+	 */
 	public void setFileTreeItem(FileTreeItem<String> item) {
 		this.fileTreeItem = item;
 
