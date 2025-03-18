@@ -40,10 +40,8 @@ import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
 import main.java.zenit.setup.SetupController;
-import main.java.zenit.ui.tree.FileTree;
-import main.java.zenit.ui.tree.FileTreeItem;
-import main.java.zenit.ui.tree.TreeClickListener;
-import main.java.zenit.ui.tree.TreeContextMenu;
+import main.java.zenit.ui.projectinfo.ProjectInfoErrorHandling;
+import main.java.zenit.ui.tree.*;
 import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
@@ -58,6 +56,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private Stage stage;
 	
 	private FileController fileController;
+
+	private FileTreeUpdater fileTreeUpdater;
 
 	private ProjectMetadataController pmc;
 	
@@ -475,7 +475,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 		treeView.setRoot(rootItem);
 		treeView.setShowRoot(false);
-		TreeContextMenu tcm = new TreeContextMenu(this, treeView);
+		fileTreeUpdater = new FileTreeUpdater(treeView);
+		TreeContextMenu tcm = new TreeContextMenu(this, fileTreeUpdater, treeView);
 		TreeClickListener tcl = new TreeClickListener(this, treeView);
 		treeView.setContextMenu(tcm);
 		treeView.setOnMouseClicked(tcl);
@@ -1670,6 +1671,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	public void showProjectProperties(ProjectFile projectFile) {
 		pmc = new ProjectMetadataController(fileController, projectFile, isDarkMode, this);
+		pmc.setFileTreeUpdater(fileTreeUpdater);
 		pmc.start();
 	}
 	
