@@ -5,7 +5,12 @@ import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.filesystem.helpers.FileNameHelpers;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Methods for creating, reading, writing, renaming and deleting .java files in file system.
@@ -123,21 +128,19 @@ public class JavaFileHandler extends FileHandler {
 	 * if file couldn't be renamed
 	 */
 	protected static File renameFile(File oldFile, String newFilename) throws IOException {
+		Path sourcePath = oldFile.toPath();
+		Path newFilePath = sourcePath.resolveSibling(newFilename);
+		File newFile = newFilePath.toFile();
+		String fileName = newFile.getName().toLowerCase();
 
-		File tempFile = FileNameHelpers.getFilepathWithoutTopFile(oldFile); // Removes file name
-
-		// Create new file with new name
-		String newFilepath = tempFile.getPath() + "/" + newFilename;
-		File newFile = new File(newFilepath);
-
-		if (newFile.exists()) {
-			throw new IOException("File already exists");
+		if (Files.exists(newFilePath)) {
+			throw new IOException("File already exists: " + newFilePath);
 		}
 
-		boolean success = oldFile.renameTo(newFile);
+		Files.move(sourcePath, newFilePath, StandardCopyOption.REPLACE_EXISTING);
 
-		if (!success) {
-			throw new IOException("Couldn't rename file");
+		if (fileName.endsWith(".java")) {
+			changeClassSignature(newFile, newFilename);
 		}
 
 		return newFile;
@@ -153,6 +156,28 @@ public class JavaFileHandler extends FileHandler {
 		if (!file.delete()) {
 			logger.severe("Failed to delete file: " + file.getPath());
 			throw new IOException("Failed to delete " + file);
+		}
+	}
+
+	/**
+	 * Changes the class signature to match the new name of the actual file. <b>This method does not rename
+	 * package declarations.</b>
+	 * @param file The file to modify
+	 * @param fileName The new class name
+	 * @throws IOException If the file cannot be read or written
+	 *
+	 * @implNote While this method uses regex, a more robust solution would be to use JavaParser.
+	 */
+	private static void changeClassSignature(File file, String fileName) throws IOException {
+		String newClassName = fileName.replace(".java", "");
+		String content = new String(Files.readAllBytes(file.toPath()));
+		Pattern pattern = Pattern.compile("\\b((public|private|protected|abstract|final|static|sealed|non-sealed)\\s+)*?(class|interface)\\s+([A-Za-z0-9_]+)\\b");
+		Matcher matcher = pattern.matcher(content);
+
+		if (matcher.find()) {
+			String oldClassName = matcher.group(4);
+			String updatedContent = content.replaceFirst("\\b" + oldClassName + "\\b", newClassName);
+			Files.write(file.toPath(), updatedContent.getBytes());
 		}
 	}
 }

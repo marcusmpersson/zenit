@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
+import com.sun.jna.platform.FileUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -18,15 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -57,6 +50,9 @@ import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 /**
  * The controller part of the main GUI.
@@ -85,6 +81,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private Process process;
 	
 	private Tuple<File, String> deletedFile = new Tuple<>();
+	private List<File> runnableClasses;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -106,6 +103,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	@FXML
 	private MenuItem openFile;
+
+	@FXML
+	private MenuItem openFolder;
 
 	@FXML
 	private MenuItem saveFile;
@@ -166,6 +166,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private MenuItem copy;
 
 	@FXML
+	private MenuItem paste;
+
+	@FXML
 	private MenuItem selectAll;
 
 	@FXML
@@ -177,7 +180,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	@FXML
 	private MenuItem removeJAR;
 
-
+	@FXML
+	private ComboBox comboBox;
 
 
 	/**
@@ -258,33 +262,42 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return loader;
 	}
 
+	public TabPane getTabPane() {
+		return tabPane;
+	}
+
 	public boolean changesHaveBeenMade(){
 		String text = getZenCodeAreaContent(); //hämtar text som inte har sparats (om det finns)
 
-		File file1 = FileTab.getFilee();
+		FileTab selectedTab = getSelectedTab();
 
-		String lastChanged = FileController.readFile(file1);
+		if (selectedTab != null) {
+			File file1 = getSelectedTab().getFile();
 
-		ArrayList<Character> textList = new ArrayList<>();
-		for (char c : text.toCharArray()) {
-			if(c != '\n' && c != '\r' && c != ' ') {
-				textList.add(c);
+			String lastChanged = FileController.readFile(file1);
+
+			ArrayList<Character> textList = new ArrayList<>();
+			for (char c : text.toCharArray()) {
+				if (c != '\n' && c != '\r' && c != ' ') {
+					textList.add(c);
+				}
+
 			}
 
-		}
+			ArrayList<Character> lastChangedList = new ArrayList<>();
+			for (char c : lastChanged.toCharArray()) {
+				if (c != '\n' && c != '\r' && c != ' ') {
+					lastChangedList.add(c);
+				}
+			}
 
-		ArrayList<Character> lastChangedList = new ArrayList<>();
-		for (char c : lastChanged.toCharArray()) {
-			if(c != '\n' && c != '\r' && c != ' ') {
-				lastChangedList.add(c);
+			if (textList.equals(lastChangedList)) {
+				return false;
+			} else {
+				return true;
 			}
 		}
-
-		if (textList.equals(lastChangedList)) {
-			return false;
-		} else {
-			return true;
-		}
+		return false;
 	}
 
 	public String getZenCodeAreaContent() {
@@ -331,6 +344,37 @@ public class MainController extends VBox implements ThemeCustomizable {
 		btnStop.setOnAction(event -> terminate());
 		initTree();
 		consoleController.setMainController(this);
+
+		comboBox.getItems().clear();
+
+		runnableClasses = new ArrayList<>();
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		traverseFileTree(root, runnableClasses);
+
+		for (File file : runnableClasses) {
+			comboBox.getItems().add(file.getName());
+		}
+		comboBox.setOnAction(event -> handleComboBox());
+	}
+
+	private void traverseFileTree(FileTreeItem<String> root, List<File> runnableClasses) {
+		if (root!=null) {
+			if (root.isRunnableJavaClass(root.getFile())) {
+				runnableClasses.add(root.getFile());
+			}
+			for (TreeItem<String> child : root.getChildren()) {
+				traverseFileTree((FileTreeItem<String>) child, runnableClasses);
+			}
+		}
+	}
+
+	private void handleComboBox() {
+		String selectedOption = comboBox.getValue().toString();
+		for (File file : runnableClasses) {
+			if (file.getName().equals(selectedOption)) {
+				openFile(file);
+			}
+		}
 	}
 
 	/**
@@ -396,7 +440,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	private void initTree() {
 		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "workspace",
-				FileTreeItem.WORKSPACE);
+				FileTreeItem.WORKSPACE, false);
 		File workspace = fileController.getWorkspace();
 		if (workspace != null) {
 			FileTree.createNodes(rootItem, workspace);
@@ -595,7 +639,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	@FXML
 	public void newTab(Event event) {
-		addTab();
+		addTab(null);
 	}
 	
 	@FXML
@@ -649,6 +693,26 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	}
 
+	@FXML
+	private void openFolder(Event event) throws IOException {
+		try {
+			DirectoryChooser directoryChooser = new DirectoryChooser();
+			File workspace = fileController.getWorkspace();
+			if (workspace != null) {
+				directoryChooser.setInitialDirectory(fileController.getWorkspace());
+			}
+			File folder = directoryChooser.showDialog(stage);
+
+			if (folder != null) {
+				File target = fileController.importProject(folder);
+				FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+				FileTree.createParentNode(root, target);
+			}
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
+    }
+
 	// Edit fliken, cut
 	@FXML
 	private void cut(ActionEvent event) {
@@ -663,6 +727,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 		FileTab selectedTab = getSelectedTab();
 		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
 		zenCodeArea.copy();
+	}
+
+	@FXML
+	private void paste(ActionEvent event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		zenCodeArea.paste();
 	}
 
 	// Edit fliken, select all
@@ -744,7 +815,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 			if (supportedFileFormat(file)) {
 			
-			FileTab selectedTab = addTab();
+			FileTab selectedTab = addTab(file);
 			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
@@ -828,7 +899,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 //		historyIndex++;
 //		System.out.println(historyIndex);
 
-		deletedFile.set(file, FileController.readFile(file));
+		/*deletedFile.set(file, FileController.readFile(file));
 		fileController.deleteFile(file);
 
 
@@ -838,6 +909,30 @@ public class MainController extends VBox implements ThemeCustomizable {
 			for (var tab : tabs) {
 				var fileTab = (FileTab) tab;
 				
+				if (fileTab != null && fileTab.getFile().equals(file)) {
+					Platform.runLater(() -> closeTab(null));
+					return;
+				}
+			}
+		}*/
+
+		try {
+			FileUtils fileUtils = FileUtils.getInstance();
+			if (fileUtils.hasTrash()) {
+				fileUtils.moveToTrash(new File[]{file});
+			} else {
+				file.delete();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		var tabs = tabPane.getTabs();
+
+		if (tabs != null) {
+			for (var tab : tabs) {
+				var fileTab = (FileTab) tab;
+
 				if (fileTab != null && fileTab.getFile().equals(file)) {
 					Platform.runLater(() -> closeTab(null));
 					return;
@@ -995,8 +1090,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 				else {
 					consoleArea.setID(consoleArea.getFileName()+ " <Terminated>");
 				}
-				
-				
+
+				updateFileTreeItem(file);
 			}
 			
 		} catch (Exception e) {
@@ -1006,6 +1101,19 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	
 	
+	}
+
+	private void updateFileTreeItem(File file) {
+		FileTreeItem<String> root = (FileTreeItem<String>) treeView.getRoot();
+		FileTreeItem<String> item = FileTree.getTreeItemFromFile(root, file);
+		if (item != null) {
+			if (item.isRunnableJavaClass(file)) {
+				item.addPlayIcon();
+			}
+			else {
+				item.removePlayIcon();
+			}
+		}
 	}
 
 	/**
@@ -1059,9 +1167,20 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param onClick The Runnable to run when the tab should be closed.
 	 * @return The new Tab.
 	 */
-	public FileTab addTab() {
+	public FileTab addTab(File file) {
+		if (file == null) {
+			file = new File("Untitled");
+		}
+
+		FileTab exisingTab = getTabFromFile(file);
+		if (exisingTab != null) {
+			tabPane.getSelectionModel().select(exisingTab);
+			return exisingTab;
+		}
+
 		FileTab tab = new FileTab(createNewZenCodeArea(), this);
 		tab.setOnCloseRequest(event -> closeTab(event));
+		tab.setUserData(file.getAbsolutePath());
 		tabPane.getTabs().add(tab);
 
 		var selectionModel = tabPane.getSelectionModel();
@@ -1171,7 +1290,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 				return fileTab;
 			}
 		}
-
 		return null;
 	}
 
@@ -1435,7 +1553,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * build paths. Show dialog box if import failed or not.
 	 * @param projectFile Project to import jar-files to
 	 */
-	public void chooseAndImportLibraries(ProjectFile projectFile) {
+	public List<File> chooseAndImportLibraries(ProjectFile projectFile) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select jar file to import");
 
@@ -1445,13 +1563,14 @@ public class MainController extends VBox implements ThemeCustomizable {
 		List<File> jarFiles = (List<File>) fileChooser.showOpenMultipleDialog(stage);
 
 		if (jarFiles != null) {
-			boolean success = fileController.chooseAndImportLibrary(stage, (List<File>) projectFile);
+			boolean success = fileController.addInternalLibraries(jarFiles, projectFile);
 			if (success) {
 				main.java.zenit.ui.DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
 			} else {
 				main.java.zenit.ui.DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
 			}
 		}
+		return jarFiles;
 	}
 	
 	/**
@@ -1519,7 +1638,34 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 		
 	}
-	
-	
-	
+
+
+	public File moveFile(File selectedFile, File destinationDir) {
+		if (!destinationDir.exists()) {
+			if (!destinationDir.mkdirs()) {
+				return null;
+			}
+		}
+
+		if (!selectedFile.exists()) {
+			return null;
+		}
+
+		File destinationFile = new File(destinationDir, selectedFile.getName());
+
+		if (destinationFile.exists()) {
+			return null;
+		}
+
+		try {
+			boolean success = selectedFile.renameTo(destinationFile);
+			if (success) {
+				return destinationFile;
+			} else {
+				return null;
+			}
+		} catch (SecurityException e) {
+			return null;
+		}
+	}
 }
