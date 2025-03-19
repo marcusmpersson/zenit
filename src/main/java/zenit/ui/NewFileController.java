@@ -15,6 +15,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+
 import java.io.File;
 import java.io.IOException;
 
@@ -127,6 +128,15 @@ public class NewFileController extends AnchorPane {
 					+ ". Please input a new name to create file.");
 		}
 		
+	}
+
+	public static void renameFile(String newName){
+		DialogBoxes.errorDialog(
+				"Rename Failed",
+				"File already exists",
+				"A file with the name \"" + newName + "\" already exists. Please choose a different name."
+		);
+
 	}
 	
 	@FXML

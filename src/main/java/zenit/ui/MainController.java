@@ -948,7 +948,12 @@ public class MainController extends VBox implements ThemeCustomizable {
 		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0,
 				prefixPosition);
 		if (newName != null) {
-			newFile = fileController.renameFile(file, newName);
+			try {
+				newFile = fileController.renameFile(file, newName);
+			} catch (IOException e) {
+
+				throw new RuntimeException(e);
+			}
 			var tabs = tabPane.getTabs();
 			for (Tab tab : tabs) {
 				FileTab fileTab = (FileTab) tab;

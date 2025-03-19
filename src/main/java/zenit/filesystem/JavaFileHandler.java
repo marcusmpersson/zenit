@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import main.java.zenit.ui.NewFileController;
 
 /**
  * Methods for creating, reading, writing, renaming and deleting .java files in file system.
@@ -134,6 +135,7 @@ public class JavaFileHandler extends FileHandler {
 		String fileName = newFile.getName().toLowerCase();
 
 		if (Files.exists(newFilePath)) {
+			NewFileController.renameFile(newFilename);
 			throw new IOException("File already exists: " + newFilePath);
 		}
 
