@@ -37,20 +37,19 @@
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="oss.sonatype" />
+      <option name="name" value="oss.sonatype" />
+      <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="jcenter" />
       <option name="url" value="http://jcenter.bintray.com" />
     </remote-repository>
     <remote-repository>
-
-      <option name="id" value="oss.sonatype" />
-      <option name="name" value="oss.sonatype" />
-      <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
-
       <option name="id" value="controlsfx-repo" />
       <option name="name" value="controlsfx-repo" />
       <option name="url" value="https://repo.controlsfx.org/repo/" />
-
     </remote-repository>
   </component>
 </project>
