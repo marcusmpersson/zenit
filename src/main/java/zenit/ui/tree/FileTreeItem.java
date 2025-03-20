@@ -89,6 +89,10 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		}
 	}
 
+	public boolean methodHasPlayIcon(File file){
+		return playIcon != null;
+	}
+
 	/**
 	 * Remove the play icon from the right of the class icon
 	 * @author Louis Brown
@@ -151,6 +155,12 @@ public class FileTreeItem<T> extends TreeItem<T> {
 			}
 		}
 		return false;
+	}
+
+	public void addIconIfMethodRunnable(File file){
+		if (isRunnableJavaClass(file)) {
+			addPlayIcon();
+		}
 	}
 
 	/**

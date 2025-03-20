@@ -272,7 +272,7 @@ public class CompletionModule {
         return start;
     }
 
-    private List<CompletionItem> getCompletions(String sourceCode, String fileName, int position) {
+    public List<CompletionItem> getCompletions(String sourceCode, String fileName, int position) {
         try {
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             if (compiler == null) {

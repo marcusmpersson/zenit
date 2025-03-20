@@ -282,6 +282,10 @@ public class FileTab extends Tab {
 	 * @param text The String to write in the TextArea.
 	 */
 	public void setFileText(String text) {
+		if(text == null){
+			text = "";
+		}
+
 		zenCodeArea.replaceText(text);
 	}
 	

@@ -255,6 +255,7 @@ public class FileController {
 				System.err.println("FileController.renameFile: " + ex.getMessage());
 			}
 		}
+
 		return newFile;
 	}
 	

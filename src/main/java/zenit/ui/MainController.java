@@ -1147,8 +1147,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			
 			// TODO: handle exception
 		}
-	
-	
+
 	}
 
 	private ConsoleArea getOrCreateConsole(String fileName) {
@@ -1180,6 +1179,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			}
 		}
 	}
+
 
 	/**
 	 * If the file of the current tab is a .java file if will be compiled, into the
@@ -1830,5 +1830,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 		} catch (SecurityException e) {
 			return null;
 		}
+	}
+
+	public int getNumberOfTabs() {
+		return tabPane.getTabs().size();
 	}
 }
