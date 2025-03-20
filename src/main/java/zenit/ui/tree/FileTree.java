@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  * Handles the nodes of a filetree
- * @author Alexander Libot
+ * @author Alexander Libot, Louis Brown
  *
  */
 public class FileTree {

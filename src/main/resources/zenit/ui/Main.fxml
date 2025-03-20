@@ -23,6 +23,7 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
 <fx:root prefHeight="640.0" prefWidth="900.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
@@ -113,6 +114,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                      </accelerator></MenuItem>
+						<MenuItem fx:id="autogenerateWorkspace" onAction="#autogenerateWorkspace" text="Autogenerate workspace"></MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="quit" onAction="#quit" text="Quit">
                      <accelerator>
@@ -181,6 +183,7 @@
 												<AnchorPane fx:id="splitPaneItem" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" SplitPane.resizableWithParent="true">
 													<children>
 														<TabPane fx:id="tabPane" accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+
 														<HBox alignment="TOP_RIGHT" fillHeight="false" layoutX="555.0" layoutY="4.0" prefHeight="22.0" prefWidth="112.0" snapToPixel="false" spacing="2.0" AnchorPane.rightAnchor="0.0">
 															<children>
                                                 <Button id="btnRun" fx:id="btnRun" alignment="CENTER" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0">
@@ -205,7 +208,32 @@
 														<ComboBox fx:id="comboBox" layoutX="500.0" layoutY="1.0" prefWidth="150.0"/>
 													</children>
 												</AnchorPane>
-												<AnchorPane fx:id="consoleRoot" prefHeight="269.0" prefWidth="667.0">
+												<VBox prefWidth="667.0">
+												<AnchorPane fx:id="replaceBar" prefHeight="30.0" minHeight="35" maxHeight="30" visible="false" managed="false">
+													<children>
+														<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="667.0"
+															  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+															  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5.0">
+															<Button fx:id="btnSpace" text="▶" visible="false" />
+															<TextField fx:id="replaceField" promptText="Replace with..." HBox.hgrow="ALWAYS"/>
+															<Button fx:id="btnReplaceOne" text="Replace"/>
+															<Button fx:id="btnReplaceAll" text="Replace all"/>
+														</HBox>
+													</children>
+												</AnchorPane>
+												<AnchorPane fx:id="searchBar" prefHeight="30.0" minHeight="35" maxHeight="30" visible="false" managed="false">
+													<children>
+														<HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="667.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" spacing="5.0">
+															<Button fx:id="btnAddReplace" text="▶" />
+															<TextField fx:id="searchField" promptText="Search..." HBox.hgrow="ALWAYS"/>
+															<Label fx:id="lblOccurrences" alignment="CENTER" contentDisplay="CENTER" text=""/>
+															<Button fx:id="btnUp" text="↑" minWidth="43.5"/>
+															<Button fx:id="btnDown" text="↓" minWidth="43.5"/>
+															<Button fx:id="btnEsc" text="X" minWidth="43.5"/>
+														</HBox>
+													</children>
+												</AnchorPane>
+												<AnchorPane fx:id="consoleRoot" prefHeight="269.0" prefWidth="667.0" VBox.vgrow="ALWAYS">
 													<children>
 														<AnchorPane fx:id="consolePane" minHeight="34" prefHeight="269.0" prefWidth="667.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
 															<children>
@@ -214,6 +242,7 @@
 														</AnchorPane>
 													</children>
 												</AnchorPane>
+												</VBox>
 											</items>
 										</SplitPane>
 									</children>

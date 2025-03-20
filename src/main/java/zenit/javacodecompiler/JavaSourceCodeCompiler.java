@@ -5,9 +5,8 @@ import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -77,6 +76,11 @@ public class JavaSourceCodeCompiler {
 		new CompileAndRun().start();
 	}
 
+	/**
+	 * Returns the JDK path.
+	 * @return JDK path.
+	 * @author Louis Brown
+	 */
 	public String getJDKPath() {
 		return cmb.getJDK();
 	}
@@ -145,7 +149,6 @@ public class JavaSourceCodeCompiler {
 			cmb.setRunPath(file.getPath());
 
 			String command = cmb.generateCommand();
-			//System.out.println("Command #2" + command);
 			Process process = executeCommand(command, null);
 			redirectStreams(process);
 			return process;

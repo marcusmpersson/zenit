@@ -47,14 +47,9 @@ public class Search {
 	 * @throws FileNotFoundException
 	 */
 	public Search(ZenCodeArea zenCodeArea, File file, boolean isDarkMode, MainController mainController) {
-		
-		new SearchInFileController(this, mainController);
-		
 		this.zenCodeArea = zenCodeArea;
 		this.file = file;
 		this.isDarkMode = isDarkMode;
-		
-
 	}
 	
 	public int searchInFile(String word) {
@@ -70,12 +65,9 @@ public class Search {
 		if(word.length() < 1) {
 			return 0;
 		}
-		
-		try {
-			txtscan = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}	
+
+		String text = zenCodeArea.getText();
+		txtscan = new Scanner(text);
 		
 		//caseSensetive needs to be change from the panel
 		searchWord = word;
@@ -98,7 +90,7 @@ public class Search {
 					List.of(isDarkMode ? "search-dark-mode" : "search-light-mode")
 				);
 			}
-			
+
 			zenCodeArea.moveTo(absolutePos.get(0).fst());
 			zenCodeArea.requestFollowCaret();
 		}
@@ -160,7 +152,7 @@ public class Search {
 			i++;
 		}else {
 			i = 0;
-			
+
 		}
 		
 		zenCodeArea.moveTo(absolutePos.get(i).fst());
@@ -175,7 +167,9 @@ public class Search {
 		if(i > 0) {
 			i--;
 		}else {
-			i = absolutePos.size() - 1;
+			if (absolutePos != null) {
+				i = absolutePos.size() - 1;
+			}
 		}
 		
 		zenCodeArea.moveTo(absolutePos.get(i).fst());

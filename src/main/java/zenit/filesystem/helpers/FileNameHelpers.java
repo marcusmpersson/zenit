@@ -61,7 +61,7 @@ public class FileNameHelpers {
 				System.err.println("Ingen 'src'-mapp hittades i sökvägen: " + file.getAbsolutePath());
 			} else {
 				System.err.println("Ingen paketmapp hittades efter 'src'. Returnerar root som paket.");
-				return ""; // Returnerar root-paket
+				return "";
 			}
 		}
 
@@ -206,6 +206,13 @@ public class FileNameHelpers {
 		return folders;
 	}
 
+	/**
+	 * Updates the package name in a java file
+	 * @param file The file to update
+	 * @param newPackageName The new package name
+	 * @throws IOException
+	 * @author Louis Brown
+	 */
 	public static void updatePackageName(File file, String newPackageName) throws IOException {
 		if (file.isDirectory() || !file.getName().endsWith(".java")) {
 			return;

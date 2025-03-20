@@ -4,6 +4,7 @@ import javafx.concurrent.Task;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import main.java.zenit.completions.CompletionModule;
+import main.java.zenit.ui.tree.FileTreeItem;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -29,6 +30,7 @@ public class ZenCodeArea extends CodeArea {
 	private CompletionModule completionModule;
 //	private int fontSize;
 //	private String font;
+	private FileTreeItem<String> fileTreeItem;
 
 	private static final String[] KEYWORDS = new String[] {
 		"abstract", "assert", "boolean", "break", "byte",
@@ -282,4 +284,34 @@ public class ZenCodeArea extends CodeArea {
 		selectRange(0, 0);
 
     }
+
+	/**
+	 * Checks if the text contains a main method.
+	 * @param text The text to check
+	 * @author Louis Brown
+	 */
+	private boolean containsMainMethod(String text) {
+		return text.contains("public static void main(String[] args)");
+	}
+
+	/**
+	 * Adds or removes the play icon from the file tree item depending on if the text contains a main method.
+	 * @param item The file tree item to set
+	 * @author Louis Brown
+	 */
+	public void setFileTreeItem(FileTreeItem<String> item) {
+		this.fileTreeItem = item;
+
+		this.textProperty().addListener((obs, oldText, newText) -> {
+			if (containsMainMethod(newText)) {
+				if (fileTreeItem != null) {
+					fileTreeItem.addPlayIcon();
+				}
+			} else {
+				if (fileTreeItem != null) {
+					fileTreeItem.removePlayIcon();
+				}
+			}
+		});
+	}
 }

@@ -8,12 +8,19 @@ import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for standard Java libraries.
+ * @author Louis Brown
+ */
 public class StandardJavaLibrariesTest {
 
     private static final String CLASS_NAME = "TestStandardLibs";
     private static final String JAVA_FILE_NAME = CLASS_NAME + ".java";
 
-
+    /**
+     * Test libraries from java.util package.
+     * @throws Exception
+     */
     @Test
     void testUtilLibrary() throws Exception {
         String javaCode = "import java.util.ArrayList;\n" +
@@ -27,6 +34,10 @@ public class StandardJavaLibrariesTest {
         executeTest(javaCode, "ArrayList Success");
     }
 
+    /**
+     * Test libraries from java.io package.
+     * @throws Exception
+     */
     @Test
     void testIoLibrary() throws Exception {
         String javaCode = "import java.io.*;\n" +
@@ -43,6 +54,10 @@ public class StandardJavaLibrariesTest {
         executeTest(javaCode, "File I/O Success");
     }
 
+    /**
+     * Test libraries from java.nio.file package.
+     * @throws Exception
+     */
     @Test
     void testNioLibrary() throws Exception {
         String javaCode = "import java.nio.file.*;\n" +
@@ -58,6 +73,12 @@ public class StandardJavaLibrariesTest {
         executeTest(javaCode, "NIO Success");
     }
 
+    /**
+     * Exutes the test.
+     * @param javaCode
+     * @param expectedOutput
+     * @throws Exception
+     */
     private void executeTest(String javaCode, String expectedOutput) throws Exception {
         //create a temporary directory for compilation
         Path tempDir = Files.createTempDirectory("zenit-test");

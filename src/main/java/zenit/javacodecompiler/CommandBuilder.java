@@ -27,6 +27,11 @@ public class CommandBuilder {
 		this.tool = tool;
 	}
 
+	/**
+	 * Returns the JDK path.
+	 * @return
+	 * @author Louis Brown
+	 */
 	public String getJDK() {
 		return JDK;
 	}
@@ -47,8 +52,6 @@ public class CommandBuilder {
 		if (this.JDK == null) {
 			this.JDK = tool;
 		}
-
-		//System.out.println("Using JDK: " + this.JDK);
 	}
 
 	public void setDirectory(String directory) {

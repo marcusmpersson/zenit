@@ -21,8 +21,10 @@ import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.filesystem.metadata.MetadataVerifier;
 import main.java.zenit.ui.DialogBoxes;
 import main.java.zenit.ui.MainController;
+import main.java.zenit.ui.tree.FileTreeUpdater;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +39,7 @@ public class ProjectMetadataController extends AnchorPane {
 	private Stage propertyStage;
 
 	private FileController fileController;
+	private FileTreeUpdater fileTreeUpdater;
 	private MainController mc;
 
 	private ProjectFile projectFile;
@@ -228,12 +231,12 @@ public class ProjectMetadataController extends AnchorPane {
 			internalLibrariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		}
 		
-		externalLibrariesList.getItems().clear();
+		/*externalLibrariesList.getItems().clear();
 		String[] externalLibraries = metadata.getExternalLibraries();
 		if (externalLibraries != null) {
 			externalLibrariesList.getItems().addAll(externalLibraries);
 			externalLibrariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		}
+		}*/
 		
 		metadata = new Metadata(metadata.getMetadataFile());
 		runnableClasses = metadata.getRunnableClasses();
@@ -243,6 +246,10 @@ public class ProjectMetadataController extends AnchorPane {
 				runnableClassesList.getItems().add(runnableClass.getPath());
 			}
 		}	
+	}
+
+	public void setFileTreeUpdater(FileTreeUpdater fileTreeUpdater) {
+		this.fileTreeUpdater = fileTreeUpdater;
 	}
 	
 	//Settings
@@ -328,6 +335,7 @@ public class ProjectMetadataController extends AnchorPane {
 			if (success) {
 				metadata = new Metadata(metadata.getMetadataFile());
 				updateLists();
+				fileTreeUpdater.addLibrariesToFileTree(selectedFiles, projectFile);
 			} else {
 				ProjectInfoErrorHandling.addInternalLibraryFail();
 			}
@@ -341,13 +349,16 @@ public class ProjectMetadataController extends AnchorPane {
 	@FXML
 	private void removeInternalLibrary() {
 		List<String> selectedLibraries = internalLibrariesList.getSelectionModel().getSelectedItems();
-		
+		List<File> selectedFiles = new ArrayList<>();
+		for (String path : selectedLibraries) {
+			selectedFiles.add(new File(path));
+		}
 		if (selectedLibraries != null) {
 			boolean success = fileController.removeInternalLibraries(selectedLibraries, projectFile);
-			System.out.println("Success: " + success);
 			if (success) {
 				metadata = new Metadata(metadata.getMetadataFile());
 				updateLists();
+				fileTreeUpdater.removeLibrariesFromFileTree(selectedFiles, projectFile);
 			} else {
 				ProjectInfoErrorHandling.removeInternalLibraryFail();
 			}

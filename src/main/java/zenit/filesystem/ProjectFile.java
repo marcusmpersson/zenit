@@ -2,6 +2,7 @@ package main.java.zenit.filesystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Subclass of {@link File} with added methods for metadata, src, bin and lib.
@@ -87,6 +88,24 @@ public class ProjectFile extends File {
 		}
 		
 		return src;
+	}
+
+	/**
+	 * Adds a main class to the src-file
+	 * @throws IOException
+	 * @author Louis Brown
+	 */
+	public void addMainClass() throws IOException {
+		String mainClassPath = src.getPath() + File.separator + "Main.java";
+		File mainClass = new File(mainClassPath);
+
+		String sampleCode = "public class Main {\n" +
+				"	public static void main(String[] args) {\n" +
+				"		System.out.println(\"Hello, World!\");\n" +
+				"	}\n" +
+				"}";
+
+		Files.write(mainClass.toPath(), sampleCode.getBytes());
 	}
 	
 	/**
