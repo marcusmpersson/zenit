@@ -206,7 +206,7 @@ public class CompletionModule {
                 completionPopup.show(codeArea, screenPos.getX(), screenPos.getY());
                 return;
             } catch (Exception e) {
-                System.out.println("Failed to use getCaretBounds");
+                // implement descrete error
             }
 
             Point2D screenPos = codeArea.localToScreen(

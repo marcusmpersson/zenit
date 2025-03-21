@@ -28,10 +28,7 @@ import javafx.stage.Stage;
 import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
-import main.java.zenit.filesystem.FileController;
-import main.java.zenit.filesystem.ProjectFile;
-import main.java.zenit.filesystem.RunnableClass;
-import main.java.zenit.filesystem.WorkspaceHandler;
+import main.java.zenit.filesystem.*;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
@@ -78,6 +75,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	private Tuple<File, String> deletedFile = new Tuple<>();
 	private List<File> runnableClasses;
+	private AutoSave autoSave;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -267,6 +265,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 			KeyboardShortcuts.setupMain(scene, this);
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+
+			autoSave = new AutoSave(this);
 
 			stage.setOnCloseRequest(event -> {
 				event.consume(); // Prevent immediate closing
