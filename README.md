@@ -17,7 +17,7 @@ Requirements:
 
 `git clone https://github.com/marcusmpersson/zenit`
 
-Then open up the project in your choice of current IDE and navigate to: `src/main/java/zenit/ui/Launcher.java`
+Then open up the project in your choice of current IDE and navigate to: `src/main/java/zenit/ui/TestUI.java`
 
 Make sure that your JRE runtime is set to Java 23 and then open "Run configurations" in your IDE for TestUI.java.
 
