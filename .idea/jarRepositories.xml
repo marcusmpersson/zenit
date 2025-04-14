@@ -12,14 +12,14 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="kordamp" />
-      <option name="name" value="kordamp" />
-      <option name="url" value="https://repo.kordamp.org/releases" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="terminalfx-repo" />
       <option name="name" value="terminalfx-repo" />
       <option name="url" value="https://github.com/javaterminal/terminalfx/raw/master/releases" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="kordamp" />
+      <option name="name" value="kordamp" />
+      <option name="url" value="https://repo.kordamp.org/releases" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="eclipse.ls" />
@@ -37,14 +37,14 @@
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="oss.sonatype" />
-      <option name="name" value="oss.sonatype" />
-      <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="jcenter" />
       <option name="url" value="http://jcenter.bintray.com" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="oss.sonatype" />
+      <option name="name" value="oss.sonatype" />
+      <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="controlsfx-repo" />
